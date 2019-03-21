@@ -197,3 +197,26 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.gitignore.io/api/android,androidstudio
+
+android/.idea/caches/
+android/.idea/workspace.xml
+
+android/.idea/caches/
+android/.idea/libraries/
+android/.idea/shelf/
+android/.idea/.name
+android/.idea/compiler.xml
+android/.idea/copyright/profiles_settings.xml
+android/.idea/encodings.xml
+android/.idea/misc.xml
+android/.idea/scopes/scope_settings.xml
+android/.idea/vcs.xml
+android/.idea/jsLibraryMappings.xml
+android/.idea/datasources.xml
+android/.idea/dataSources.ids
+android/.idea/sqlDataSources.xml
+android/.idea/dynamic.xml
+android/.idea/uiDesigner.xml
+
+
+
