@@ -9,10 +9,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Ben\'n\'Liq',
       theme: ThemeData(
           backgroundColor: Colors.white,
-//          brightness: Brightness.dark,
           textTheme: TextTheme(
               body1: TextStyle(
                   color: Colors.grey,
@@ -27,7 +26,8 @@ class MyApp extends StatelessWidget {
           appBar: AppBar(
             title: Text(
               'hey',
-              style: TextStyle(color: Colors.white,
+              style: TextStyle(
+                  color: Colors.white,
                   fontFamily: 'IndieFlower',
                   fontSize: 15.0),
             ),

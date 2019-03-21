@@ -21,12 +21,13 @@ class _LiquidPageState extends State<LiquidPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          buildName(),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('${widget._liquid.name}',
+            style: Theme.of(context).textTheme.title),
+      ),
+      body: Center(
+        child: buildName(),
       ),
     );
   }
