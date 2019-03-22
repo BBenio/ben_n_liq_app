@@ -11,28 +11,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Ben\'n\'Liq',
       theme: ThemeData(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.blueAccent,
+          bottomAppBarColor: Colors.lightBlue,
           textTheme: TextTheme(
-              body1: TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'IndieFlower',
-                  fontSize: 25.0),
-              body2: TextStyle(fontSize: 30.0),
-              title: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'IndieFlower',
-                  fontSize: 15.0))),
-      home: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'hey',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'IndieFlower',
-                  fontSize: 15.0),
-            ),
-          ),
-          body: LiquidList(buildLiquidsTemp())),
+            body1: TextStyle(
+                color: Colors.grey, fontFamily: 'IndieFlower', fontSize: 25.0),
+            subhead: TextStyle(
+                color: Colors.black, fontFamily: 'IndieFlower', fontSize: 20.0),
+            subtitle: TextStyle(
+                color: Colors.grey, fontFamily: 'IndieFlower', fontSize: 15.0),
+            button: TextStyle(
+                color: Colors.black, fontFamily: 'IndieFlower', fontSize: 20.0),
+            title: TextStyle(
+                color: Colors.white, fontFamily: 'IndieFlower', fontSize: 25.0),
+          )
+      ),
+      home: MyHomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -65,11 +59,43 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text(
+            'Liquid\'s Ben',
+            style: Theme.of(context).textTheme.title,
+          ),
         ),
-        body: Center(
-          child: LiquidList(buildLiquidsTemp()),
-        ));
+        drawer: Drawer(
+          child: ListView(
+            children: <Widget>[
+              DrawerHeader(
+                child: Container(
+                  child: Text(
+                    'Ben\'n\'Liq App',
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                  alignment: Alignment(0.0, 0.0),
+                ),
+                decoration:
+                    BoxDecoration(color: Theme.of(context).backgroundColor),
+              ),
+              ListTile(
+                title: Text(
+                  'A acheter',
+                  style: Theme.of(context).textTheme.button
+                ),
+                leading: Icon(Icons.exposure_zero),
+              ),
+              ListTile(
+                title: Text(
+                  'Liste complete',
+                  style: Theme.of(context).textTheme.button,
+                ),
+                leading: Icon(Icons.all_inclusive),
+              )
+            ],
+          ),
+        ),
+        body: LiquidList(buildLiquidsTemp()));
   }
 
   List<Liquid> buildLiquidsTemp() {

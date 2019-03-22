@@ -28,11 +28,11 @@ class _LiquidListState extends State<LiquidList> {
           },
           title: Text(
             widget._liquids[index].name,
-            style: Theme.of(context).textTheme.body1,
+            style: Theme.of(context).textTheme.subhead,
           ),
           subtitle: Text(
             widget._liquids[index].remainingQuantity.toString(),
-            style: Theme.of(context).textTheme.body2,
+            style: Theme.of(context).textTheme.subtitle,
           ),
         );
       },
