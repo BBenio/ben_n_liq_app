@@ -1,0 +1,133 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:ben_n_liq_app/liquid.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+
+class LiquidsStorage {
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/liquids.json');
+  }
+
+  Future<List<Liquid>> readCounter() async {
+    try {
+      final file = await _localFile;
+
+      List<Liquid> liquids = List<Liquid>();
+
+      // Read the file
+      String contents = await file.readAsString();
+
+      return liquids;
+    } catch (e) {
+      // If encountering an error, return 0
+      return List<Liquid>();
+    }
+  }
+
+  Future<File> writeCounter(int counter) async {
+    final file = await _localFile;
+
+    // Write the file
+    return file.writeAsString('$counter');
+  }
+}
+
+class CounterStorage {
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+//    File f = File('./.liquids.json');
+//    print(f.readAsString());
+//    print(Directory.current.path);
+    if (File("${directory.path}/counter.txt").existsSync()) {
+      print('alse');
+    } else {
+      print('ol');
+    }
+    return directory.path;
+//    return Directory.current.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/counter.txt');
+  }
+
+  Future<int> readCounter() async {
+    try {
+      final file = await _localFile;
+
+      // Read the file
+      String contents = await file.readAsString();
+
+      return int.parse(contents);
+    } catch (e) {
+      // If encountering an error, return 0
+      return 0;
+    }
+  }
+
+  Future<File> writeCounter(int counter) async {
+    final file = await _localFile;
+
+    // Write the file
+    return file.writeAsString('$counter');
+  }
+}
+
+class FlutterDemo extends StatefulWidget {
+  final CounterStorage storage;
+
+  FlutterDemo({Key key, @required this.storage}) : super(key: key);
+
+  @override
+  _FlutterDemoState createState() => _FlutterDemoState();
+}
+
+class _FlutterDemoState extends State<FlutterDemo> {
+  int _counter;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.storage.readCounter().then((int value) {
+      setState(() {
+        _counter = value;
+      });
+    });
+  }
+
+  Future<File> _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+
+    // Write the variable as a string to the file.
+    return widget.storage.writeCounter(_counter);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Reading and Writing Files')),
+      body: Center(
+        child: Text(
+          'Button tapped $_counter time${_counter == 1 ? '' : 's'}.',
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}

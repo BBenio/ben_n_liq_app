@@ -217,6 +217,7 @@ android/.idea/dataSources.ids
 android/.idea/sqlDataSources.xml
 android/.idea/dynamic.xml
 android/.idea/uiDesigner.xml
+ios/Podfile
 
 
 

@@ -11,7 +11,7 @@ class LiquidPage extends StatefulWidget {
 }
 
 class _LiquidPageState extends State<LiquidPage> {
-  Widget buildName() {
+  Text buildName() {
     return Text(
       widget._liquid.name,
       textAlign: TextAlign.center,

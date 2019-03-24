@@ -26,16 +26,24 @@ class _LiquidListState extends State<LiquidList> {
                       Key(widget._liquids[index].name))),
             );
           },
-          title: Text(
-            widget._liquids[index].name,
-            style: Theme.of(context).textTheme.subhead,
-          ),
-          subtitle: Text(
-            widget._liquids[index].remainingQuantity.toString(),
-            style: Theme.of(context).textTheme.subtitle,
-          ),
+          title: buildTitle(index, context),
+          subtitle: buildSubtitle(index, context),
         );
       },
+    );
+  }
+
+  Text buildTitle(int index, BuildContext context) {
+    return Text(
+      widget._liquids[index].name,
+      style: Theme.of(context).textTheme.subhead,
+    );
+  }
+
+  Text buildSubtitle(int index, BuildContext context) {
+    return Text(
+      widget._liquids[index].quantity.toString(),
+      style: Theme.of(context).textTheme.subtitle,
     );
   }
 }

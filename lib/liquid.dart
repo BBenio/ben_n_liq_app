@@ -1,15 +1,25 @@
 class Liquid {
-  final String _name;
+  String _name;
+  String _brand;
   int _remainingQuantity;
   String _pathImage;
 
-  Liquid(this._name, [this._remainingQuantity = 3, this._pathImage]);
+  Liquid(this._name, this._brand,
+      [this._remainingQuantity = 3, this._pathImage]);
 
-  String get name => this._name;
+  factory Liquid.fromJson(Map<String, dynamic> parsedJson) {
+    return Liquid(
+      parsedJson['name'],
+      parsedJson['brand'],
+      parsedJson['quantity'],
+    );
+  }
 
-  String get pathImage => this._pathImage;
-
-  int get remainingQuantity => this._remainingQuantity;
+  Map<String, dynamic> toJson() => {
+        'name': _name,
+        'brand': _brand,
+        'quantity': quantity,
+      };
 
   void addOneQuantity() => this._remainingQuantity++;
 
@@ -30,4 +40,12 @@ class Liquid {
     }
     return false;
   }
+
+  String get name => this._name;
+
+  String get brand => this._brand;
+
+  String get pathImage => this._pathImage;
+
+  int get quantity => this._remainingQuantity;
 }
