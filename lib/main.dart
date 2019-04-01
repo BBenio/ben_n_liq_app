@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 Future main() async {
   LiquidService liquidService = LiquidService();
 
-  List<Liquid> liquids = List<Liquid>();
-
+//  List<Liquid> liquids = List<Liquid>();
 //  liquids = await liquidService.loadLiquidsAssets();
-
 //  liquidService.saveLiquids(liquids);
 
   runApp(MyApp(liquidService));
@@ -42,6 +40,8 @@ class MyApp extends StatelessWidget {
               color: Colors.white, fontFamily: 'IndieFlower', fontSize: 20.0),
           title: TextStyle(
               color: Colors.white, fontFamily: 'IndieFlower', fontSize: 25.0),
+          overline: TextStyle(
+              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 20.0),
         ),
         appBarTheme: AppBarTheme(
           color: Colors.red,
@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
       drawer: buildDrawer(context),
       floatingActionButton: buildFloatingActionButton(context),
       body: _liquids.length > 0
-          ? LiquidList(_liquids)
+          ? LiquidList(_liquids, widget.liquidService, _scaffoldKey)
           : Center(
               child: CircularProgressIndicator(),
             ),
@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  _showDialog2(BuildContext context) async {
+  _showDialogAddLiquid(BuildContext context) async {
     Liquid liquid = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => LiquidForm()),
@@ -119,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
           .saveLiquids(_liquids)
           .then((f) => _scaffoldKey.currentState.showSnackBar(SnackBar(
                 content: Text('Enregistrés !'),
-                duration: Duration(seconds: 3),
+                duration: Duration(seconds: 1),
               )));
     }
   }
@@ -128,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return FloatingActionButton(
       child: Icon(Icons.add),
       onPressed: () {
-        _showDialog2(context);
+        _showDialogAddLiquid(context);
       },
       backgroundColor: Theme.of(context).buttonColor,
     );
@@ -176,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return ListTile(
       title: Text(
         'Liste complete',
-        style: Theme.of(context).textTheme.button,
+        style: Theme.of(context).textTheme.overline,
       ),
       leading: Icon(Icons.all_inclusive),
     );
@@ -184,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ListTile buildButtonToBuy(BuildContext context) {
     return ListTile(
-      title: Text('A acheter', style: Theme.of(context).textTheme.button),
+      title: Text('A acheter', style: Theme.of(context).textTheme.overline),
       leading: Icon(Icons.exposure_zero),
     );
   }
