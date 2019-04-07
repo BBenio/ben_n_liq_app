@@ -2,14 +2,16 @@ import 'package:ben_n_liq_app/liquid.dart';
 import 'package:ben_n_liq_app/liquid_form.dart';
 import 'package:ben_n_liq_app/liquid_list.dart';
 import 'package:ben_n_liq_app/liquid_service.dart';
+import 'package:ben_n_liq_app/list_liquid_page.dart';
 import 'package:ben_n_liq_app/parser.dart';
 import 'package:flutter/material.dart';
 
 Future main() async {
   LiquidService liquidService = LiquidService();
 
-//  List<Liquid> liquids = List<Liquid>();
-//  liquids = await liquidService.loadLiquidsAssets();
+  List<Liquid> liquids = List<Liquid>();
+  liquids = await liquidService.loadLiquidsDirectory();
+  liquidService.saveLiquidsHistory(liquids);
 //  liquidService.saveLiquids(liquids);
 
   runApp(MyApp(liquidService));
@@ -39,12 +41,24 @@ class MyApp extends StatelessWidget {
           button: TextStyle(
               color: Colors.white, fontFamily: 'IndieFlower', fontSize: 20.0),
           title: TextStyle(
-              color: Colors.white, fontFamily: 'IndieFlower', fontSize: 25.0),
+              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 50.0),
           overline: TextStyle(
               color: Colors.black, fontFamily: 'IndieFlower', fontSize: 20.0),
         ),
         appBarTheme: AppBarTheme(
+          textTheme: TextTheme(
+            title: TextStyle(
+                color: Colors.white, fontFamily: 'IndieFlower', fontSize: 25.0),
+          ),
           color: Colors.red,
+        ),
+        primaryTextTheme: TextTheme(
+          title: TextStyle(
+              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 50.0),
+          subtitle: TextStyle(
+              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 40.0),
+          overline: TextStyle(
+              color: Colors.grey, fontFamily: 'IndieFlower', fontSize: 25.0),
         ),
         buttonColor: Colors.red,
         disabledColor: Color.fromRGBO(223, 177, 180, 0.0),
@@ -86,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: buildAppBar(context),
-      drawer: buildDrawer(context),
+      drawer: DrawerLiquids(widget.liquidService),
       floatingActionButton: buildFloatingActionButton(context),
       body: _liquids.length > 0
           ? LiquidList(_liquids, widget.liquidService, _scaffoldKey)
@@ -100,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return AppBar(
       title: Text(
         'Liquid\'s Ben',
-        style: Theme.of(context).textTheme.title,
+        style: Theme.of(context).appBarTheme.textTheme.title,
       ),
     );
   }
@@ -133,26 +147,48 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Theme.of(context).buttonColor,
     );
   }
+}
 
-  Drawer buildDrawer(BuildContext context) {
+class DrawerLiquids extends StatelessWidget {
+  final List<Liquid> allLiquids = [];
+  final LiquidService liquidService;
+  final List<Liquid> liquidsNotEmpty = [];
+  final List<Liquid> liquidsEmpty = [];
+
+  DrawerLiquids(this.liquidService);
+
+  @override
+  Widget build(BuildContext context) {
+    liquidService.loadLiquidsDirectory().then((List<Liquid> l) {
+      allLiquids.addAll(l);
+    });
+    allLiquids.forEach((Liquid liquid) {
+      if (liquid.quantity > 0) {
+        liquidsNotEmpty.add(liquid);
+      }
+      if (liquid.quantity == 0) {
+        liquidsEmpty.add(liquid);
+      }
+    });
     return Drawer(
       child: ListView(
         children: <Widget>[
-          buildHeader(context),
-          buildButtonToBuy(context),
-          buildButtonAllLiquids(context),
-          buildButtonTemp(context)
+          _buildHeader(context),
+          _buildButtonHome(context),
+          _buildButtonToBuy(context),
+          _buildButtonAllLiquids(context),
+          _buildButtonTemp(context)
         ],
       ),
     );
   }
 
-  DrawerHeader buildHeader(BuildContext context) {
+  DrawerHeader _buildHeader(BuildContext context) {
     return DrawerHeader(
       child: Container(
         child: Text(
           'Ben\'n\'Liq App',
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).appBarTheme.textTheme.title,
         ),
         alignment: Alignment(0.0, 0.0),
       ),
@@ -160,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  ListTile buildButtonTemp(BuildContext context) {
+  ListTile _buildButtonTemp(BuildContext context) {
     return ListTile(
       title: Text("temp"),
       onTap: () {
@@ -172,20 +208,53 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  ListTile buildButtonAllLiquids(BuildContext context) {
+  ListTile _buildButtonHome(BuildContext context) {
+    return ListTile(
+//      title: Text(
+//        'Liste complete',
+//        style: Theme.of(context).textTheme.overline,
+//      ),
+      leading: Icon(Icons.home),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (context) => ListLiquidsPage(
+                  liquidsNotEmpty, liquidService, "Liquid's Ben")),
+        );
+//        ListLiquidsPage(_liquids, liquidService, "Liquid's Ben");
+//        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  ListTile _buildButtonAllLiquids(BuildContext context) {
     return ListTile(
       title: Text(
         'Liste complete',
         style: Theme.of(context).textTheme.overline,
       ),
       leading: Icon(Icons.all_inclusive),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (context) =>
+                  ListLiquidsPage(allLiquids, liquidService, "Liquid's Ben")),
+        );
+      },
     );
   }
 
-  ListTile buildButtonToBuy(BuildContext context) {
+  ListTile _buildButtonToBuy(BuildContext context) {
     return ListTile(
       title: Text('A acheter', style: Theme.of(context).textTheme.overline),
       leading: Icon(Icons.exposure_zero),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (context) =>
+                  ListLiquidsPage(liquidsEmpty, liquidService, "Liquid's Ben")),
+        );
+      },
     );
   }
 }

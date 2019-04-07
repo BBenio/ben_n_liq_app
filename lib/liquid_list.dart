@@ -27,7 +27,7 @@ class _LiquidListState extends State<LiquidList> {
           child: buildLiquidTile(index, context),
           delegate: SlidableDrawerDelegate(),
           actionExtentRatio: 0.25,
-          secondaryActions: <Widget>[
+          actions: <Widget>[
             IconSlideAction(
               icon: Icons.delete_forever,
               onTap: () => _deleteLiquid(index),

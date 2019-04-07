@@ -16,6 +16,11 @@ class LiquidService {
     return File('$path/liquids.json');
   }
 
+  Future<File> get _localFileHistory async {
+    final path = await _localPath;
+    return File('$path/liquids2.json');
+  }
+
   Future<String> _loadALiquidAsset() async {
     return await rootBundle.loadString('assets/liquid.json');
   }
@@ -55,6 +60,14 @@ class LiquidService {
     print('Begining to save liquids');
     String tmp = jsonEncode(liquids);
     final file = await _localFile;
+    file.writeAsString(tmp);
+    print('Finish to save liquids');
+  }
+
+  Future saveLiquidsHistory(List<Liquid> liquids) async {
+    print('Begining to save liquids');
+    String tmp = jsonEncode(liquids);
+    final file = await _localFileHistory;
     file.writeAsString(tmp);
     print('Finish to save liquids');
   }

@@ -29,12 +29,12 @@ class _LiquidPageState extends State<LiquidPage> {
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text('${widget._liquid.name}',
-              style: Theme.of(context).textTheme.title),
+              style: Theme.of(context).appBarTheme.textTheme.title),
         ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[_buildName(), _buildQuantity(), _buildButtons()],
+            children: <Widget>[_buildName(), _buildBrand(), _buildQuantity(), _buildButtons()],
           ),
         ));
   }
@@ -43,7 +43,16 @@ class _LiquidPageState extends State<LiquidPage> {
     return Center(
       child: Text(
         widget._liquid.name,
-        style: TextStyle(color: Colors.indigo),
+        style: Theme.of(context).primaryTextTheme.title,
+      ),
+    );
+  }
+
+  Widget _buildBrand() {
+    return Center(
+      child: Text(
+        widget._liquid.brand,
+        style: Theme.of(context).primaryTextTheme.overline,
       ),
     );
   }
@@ -52,7 +61,7 @@ class _LiquidPageState extends State<LiquidPage> {
     return Center(
       child: Text(
         quan,
-        style: TextStyle(color: Colors.indigo),
+        style: Theme.of(context).primaryTextTheme.subtitle,
       ),
     );
   }

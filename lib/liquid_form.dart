@@ -126,7 +126,8 @@ class _LiquidFormState extends State<LiquidForm> {
 
   AppBar buildAppBar() {
     return AppBar(
-      title: Text("Ajouter un produit"),
+      title: Text("Ajouter un produit",
+          style: Theme.of(context).appBarTheme.textTheme.title),
     );
   }
 }
