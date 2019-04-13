@@ -9,13 +9,9 @@ class Liquid {
 
   factory Liquid.fromJson(Map<String, dynamic> parsedJson) {
     double rate = 0;
-    print("ntmp 1");
-    print(parsedJson['rate']);
     if (parsedJson['rate'] != null) {
-      print("et la tu passes fdp");
       rate = parsedJson['rate'];
     }
-    print("ntmp4");
     return Liquid(
       parsedJson['name'],
       parsedJson['brand'],

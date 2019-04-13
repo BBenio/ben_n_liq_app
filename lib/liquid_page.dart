@@ -84,30 +84,6 @@ class _LiquidPageState extends State<LiquidPage> {
     );
   }
 
-  Widget _buildStars() {
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          StarRating(
-              size: 25.0,
-              rating: widget._liquid.rating,
-              color: Colors.orange,
-              borderColor: Colors.grey,
-              starCount: 5,
-              onRatingChanged: (rating) {
-                setState(
-                  () {
-                    widget._liquid.rating = rating;
-                  },
-                );
-                widget.saveLiquids();
-              }),
-        ],
-      ),
-    );
-  }
-
   Widget _buildButtonAdd() {
     return Container(
       margin: EdgeInsets.all(10),
@@ -120,7 +96,7 @@ class _LiquidPageState extends State<LiquidPage> {
     );
   }
 
-  void _onAddQuantity() {
+  _onAddQuantity() {
     widget._liquid.addOneQuantity();
     widget.saveLiquids();
     setState(() {
@@ -134,17 +110,41 @@ class _LiquidPageState extends State<LiquidPage> {
       child: FloatingActionButton(
         heroTag: 1,
         child: Icon(Icons.exposure_neg_1),
-        onPressed: _onMinusQuantity,
+        onPressed: _onDecreaseQuantity,
         backgroundColor: Colors.grey,
       ),
     );
   }
 
-  void _onMinusQuantity() {
+  _onDecreaseQuantity() {
     widget._liquid.removeOneQuantity();
     widget.saveLiquids();
     setState(() {
       quantity = widget._liquid.quantity.toString();
     });
+  }
+
+  Widget _buildStars() {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          StarRating(
+              size: 25.0,
+              rating: widget._liquid.rating,
+              color: Colors.orange,
+              borderColor: Colors.grey,
+              starCount: 5,
+              onRatingChanged: (rating) {
+                setState(
+                      () {
+                    widget._liquid.rating = rating;
+                  },
+                );
+                widget.saveLiquids();
+              }),
+        ],
+      ),
+    );
   }
 }
