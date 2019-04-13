@@ -2,16 +2,31 @@
   {
     "name": "Ragnarok",
     "brand": "A&L",
-    "quantity": 1
+    "quantity": 4
   },
   {
     "name": "Oni",
     "brand": "A&L",
-    "quantity": 1
+    "quantity": 5
   },
   {
     "name": "Wanaka",
     "brand": "Solana",
+    "quantity": 0
+  },
+  {
+    "name": "redAstaire",
+    "brand": "TJuice",
     "quantity": 1
+  },
+  {
+    "name": "Phoenix",
+    "brand": "Solana",
+    "quantity": 0
+  },
+  {
+    "name": "fuck",
+    "brand": "A&L",
+    "quantity": 3
   }
 ]

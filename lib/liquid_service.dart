@@ -47,6 +47,15 @@ class LiquidService {
     return liquids;
   }
 
+  Future<List<Liquid>> loadLiquidsHistory() async {
+    print('Begining to load liquidsDirectory');
+    File file = await _localFileHistory;
+    List<dynamic> jsonResponse = jsonDecode(await file.readAsString());
+    List<Liquid> liquids = jsonResponse.map((i) => Liquid.fromJson(i)).toList();
+    print('Finish to load liquidsDirectory');
+    return liquids;
+  }
+
   Future<Liquid> loadLiquid() async {
     print('Begining to load liquid');
     String jsonString = await _loadALiquidAsset();

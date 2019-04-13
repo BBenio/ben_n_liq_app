@@ -2,10 +2,10 @@ class Liquid {
   String _name;
   String _brand;
   int _remainingQuantity;
-  String _pathImage;
+  double _note;
 
   Liquid(this._name, this._brand,
-      [this._remainingQuantity = 3, this._pathImage]);
+      [this._remainingQuantity = 3, this._note = 0]);
 
   factory Liquid.fromJson(Map<String, dynamic> parsedJson) {
     return Liquid(
@@ -19,6 +19,7 @@ class Liquid {
         'name': _name,
         'brand': _brand,
         'quantity': quantity,
+        'note': _note,
       };
 
   void addOneQuantity() => this._remainingQuantity++;
@@ -42,10 +43,8 @@ class Liquid {
   }
 
   String get name => this._name;
-
+  double get note => this._note;
+  set note(double newNote) => this._note = newNote;
   String get brand => this._brand;
-
-  String get pathImage => this._pathImage;
-
   int get quantity => this._remainingQuantity;
 }

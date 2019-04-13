@@ -1,3 +1,4 @@
+import 'package:ben_n_liq_app/drawer.dart';
 import 'package:ben_n_liq_app/liquid.dart';
 import 'package:ben_n_liq_app/liquid_form.dart';
 import 'package:ben_n_liq_app/liquid_list.dart';
@@ -8,11 +9,12 @@ import 'package:flutter/material.dart';
 
 Future main() async {
   LiquidService liquidService = LiquidService();
-
   List<Liquid> liquids = List<Liquid>();
-  liquids = await liquidService.loadLiquidsDirectory();
-  liquidService.saveLiquidsHistory(liquids);
-//  liquidService.saveLiquids(liquids);
+
+  liquids = await liquidService.loadLiquidsAssets();
+//  liquids = await liquidService.loadLiquidsDirectory();
+//  liquidService.saveLiquidsHistory(liquids);
+  liquidService.saveLiquids(liquids);
 
   runApp(MyApp(liquidService));
 }
@@ -79,182 +81,207 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Liquid> _liquids = List<Liquid>();
+  List<Liquid> _allLiquids = List<Liquid>();
+  List<Liquid> _liquidsNotEmpty = List<Liquid>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   initState() {
     super.initState();
-    setState(() {
-      _liquids.clear();
-    });
-    widget.liquidService.loadLiquidsDirectory().then((List<Liquid> l) {
-      setState(() {
-        _liquids.addAll(l);
-      });
-    });
+//    setState(() {
+//      _allLiquids.clear();
+//      _liquidsNotEmpty.clear();
+//    });
+//    widget.liquidService.loadLiquidsDirectory().then((List<Liquid> l) {
+//      setState(() {
+//        _allLiquids.addAll(l);
+//        _allLiquids.forEach((Liquid liquid) {
+//          if (liquid.quantity > 0) {
+//            _liquidsNotEmpty.add(liquid);
+//          }
+//        });
+//      });
+//    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: buildAppBar(context),
-      drawer: DrawerLiquids(widget.liquidService),
-      floatingActionButton: buildFloatingActionButton(context),
-      body: _liquids.length > 0
-          ? LiquidList(_liquids, widget.liquidService, _scaffoldKey)
-          : Center(
-              child: CircularProgressIndicator(),
-            ),
+//      appBar: buildAppBar(context),
+//      drawer: DrawerLiquids(_allLiquids, widget.liquidService),
+//      floatingActionButton: buildFloatingActionButton(context),
+      body: ListLiquidsPage(
+          widget.liquidService, DrawerActions.LiquidsNotEmpty, "Liquid's Ben"),
+//      body: _liquidsNotEmpty.length > 0
+//          ? ListLiquidsPage(
+//          widget.liquidService, DrawerActions.LiquidsNotEmpty, "Liquid's Ben")
+//          : Center(
+//              child: CircularProgressIndicator(),
+//            ),
     );
   }
 
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      title: Text(
-        'Liquid\'s Ben',
-        style: Theme.of(context).appBarTheme.textTheme.title,
-      ),
-    );
-  }
+//  AppBar buildAppBar(BuildContext context) {
+//    return AppBar(
+//      title: Text(
+//        'Liquid\'s Ben',
+//        style: Theme.of(context).appBarTheme.textTheme.title,
+//      ),
+//    );
+//  }
 
-  _showDialogAddLiquid(BuildContext context) async {
-    Liquid liquid = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => LiquidForm()),
-    );
+//  _showDialogAddLiquid(BuildContext context) async {
+//    Liquid liquid = await Navigator.push(
+//      context,
+//      MaterialPageRoute(builder: (context) => LiquidForm()),
+//    );
+//
+//    if (liquid != null) {
+//      setState(() {
+//        _allLiquids.add(liquid);
+//      });
+//      widget.liquidService
+//          .saveLiquids(_allLiquids)
+//          .then((f) => _scaffoldKey.currentState.showSnackBar(SnackBar(
+//                content: Text('Enregistrés !'),
+//                duration: Duration(seconds: 1),
+//              )));
+//    }
+//  }
 
-    if (liquid != null) {
-      setState(() {
-        _liquids.add(liquid);
-      });
-      widget.liquidService
-          .saveLiquids(_liquids)
-          .then((f) => _scaffoldKey.currentState.showSnackBar(SnackBar(
-                content: Text('Enregistrés !'),
-                duration: Duration(seconds: 1),
-              )));
-    }
-  }
-
-  FloatingActionButton buildFloatingActionButton(BuildContext context) {
-    return FloatingActionButton(
-      child: Icon(Icons.add),
-      onPressed: () {
-        _showDialogAddLiquid(context);
-      },
-      backgroundColor: Theme.of(context).buttonColor,
-    );
-  }
+//  FloatingActionButton buildFloatingActionButton(BuildContext context) {
+//    return FloatingActionButton(
+//      child: Icon(Icons.add),
+//      onPressed: () {
+//        _showDialogAddLiquid(context);
+//      },
+//      backgroundColor: Theme.of(context).buttonColor,
+//    );
+//  }
 }
 
-class DrawerLiquids extends StatelessWidget {
-  final List<Liquid> allLiquids = [];
-  final LiquidService liquidService;
-  final List<Liquid> liquidsNotEmpty = [];
-  final List<Liquid> liquidsEmpty = [];
-
-  DrawerLiquids(this.liquidService);
-
-  @override
-  Widget build(BuildContext context) {
-    liquidService.loadLiquidsDirectory().then((List<Liquid> l) {
-      allLiquids.addAll(l);
-    });
-    allLiquids.forEach((Liquid liquid) {
-      if (liquid.quantity > 0) {
-        liquidsNotEmpty.add(liquid);
-      }
-      if (liquid.quantity == 0) {
-        liquidsEmpty.add(liquid);
-      }
-    });
-    return Drawer(
-      child: ListView(
-        children: <Widget>[
-          _buildHeader(context),
-          _buildButtonHome(context),
-          _buildButtonToBuy(context),
-          _buildButtonAllLiquids(context),
-          _buildButtonTemp(context)
-        ],
-      ),
-    );
-  }
-
-  DrawerHeader _buildHeader(BuildContext context) {
-    return DrawerHeader(
-      child: Container(
-        child: Text(
-          'Ben\'n\'Liq App',
-          style: Theme.of(context).appBarTheme.textTheme.title,
-        ),
-        alignment: Alignment(0.0, 0.0),
-      ),
-      decoration: BoxDecoration(color: Theme.of(context).backgroundColor),
-    );
-  }
-
-  ListTile _buildButtonTemp(BuildContext context) {
-    return ListTile(
-      title: Text("temp"),
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context) => FlutterDemo(storage: CounterStorage())),
-        );
-      },
-    );
-  }
-
-  ListTile _buildButtonHome(BuildContext context) {
-    return ListTile(
+//class DrawerLiquids extends StatelessWidget {
+//  final List<Liquid> allLiquids;
+//  final LiquidService liquidService;
+//  final List<Liquid> liquidsNotEmpty = [];
+//  final List<Liquid> liquidsEmpty = [];
+//
+//  DrawerLiquids(this.allLiquids, this.liquidService);
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    liquidsNotEmpty.clear();
+//    liquidsEmpty.clear();
+//    allLiquids.forEach((Liquid liquid) {
+//      if (liquid.quantity > 0) {
+//        liquidsNotEmpty.add(liquid);
+//      }
+//      if (liquid.quantity == 0) {
+//        liquidsEmpty.add(liquid);
+//      }
+//    });
+//    return Drawer(
+//      child: ListView(
+//        children: <Widget>[
+//          _buildHeader(context),
+//          _buildButtonHome(context),
+//          _buildButtonToBuy(context),
+//          _buildButtonAllLiquids(context),
+//          _buildButtonTemp(context)
+//        ],
+//      ),
+//    );
+//  }
+//
+//  DrawerHeader _buildHeader(BuildContext context) {
+//    return DrawerHeader(
+//      child: Container(
+//        child: Text(
+//          'Ben\'n\'Liq App',
+//          style: Theme.of(context).appBarTheme.textTheme.title,
+//        ),
+//        alignment: Alignment(0.0, 0.0),
+//      ),
+//      decoration: BoxDecoration(color: Theme.of(context).backgroundColor),
+//    );
+//  }
+//
+//  ListTile _buildButtonHome(BuildContext context) {
+//    return ListTile(
+//      title: Text(
+//        'Available',
+//        style: Theme.of(context).textTheme.overline,
+//      ),
+//      leading: Icon(Icons.home),
+//      onTap: () {
+//        liquidsNotEmpty.clear();
+//        allLiquids.forEach((Liquid liquid) {
+//          if (liquid.quantity > 0) {
+//            liquidsNotEmpty.add(liquid);
+//          }
+//        });
+//        Navigator.of(context).pop();
+//        Navigator.of(context).push(MaterialPageRoute(
+//          builder: (context) => ListLiquidsPage(
+//              liquidsNotEmpty, allLiquids, liquidService, "Liquid's Ben"),
+//        )
+////        ListLiquidsPage(_liquids, liquidService, "Liquid's Ben");
+////        Navigator.of(context).pop();
+//            );
+//      },
+//    );
+//  }
+//
+//  ListTile _buildButtonAllLiquids(BuildContext context) {
+//    return ListTile(
 //      title: Text(
 //        'Liste complete',
 //        style: Theme.of(context).textTheme.overline,
 //      ),
-      leading: Icon(Icons.home),
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context) => ListLiquidsPage(
-                  liquidsNotEmpty, liquidService, "Liquid's Ben")),
-        );
-//        ListLiquidsPage(_liquids, liquidService, "Liquid's Ben");
+//      leading: Icon(Icons.all_inclusive),
+//      onTap: () {
 //        Navigator.of(context).pop();
-      },
-    );
-  }
-
-  ListTile _buildButtonAllLiquids(BuildContext context) {
-    return ListTile(
-      title: Text(
-        'Liste complete',
-        style: Theme.of(context).textTheme.overline,
-      ),
-      leading: Icon(Icons.all_inclusive),
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context) =>
-                  ListLiquidsPage(allLiquids, liquidService, "Liquid's Ben")),
-        );
-      },
-    );
-  }
-
-  ListTile _buildButtonToBuy(BuildContext context) {
-    return ListTile(
-      title: Text('A acheter', style: Theme.of(context).textTheme.overline),
-      leading: Icon(Icons.exposure_zero),
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context) =>
-                  ListLiquidsPage(liquidsEmpty, liquidService, "Liquid's Ben")),
-        );
-      },
-    );
-  }
-}
+//        Navigator.of(context).push(
+//          MaterialPageRoute(
+//              builder: (context) => ListLiquidsPage(
+//                  allLiquids, allLiquids, liquidService, "All Liquids")),
+//        );
+//      },
+//    );
+//  }
+//
+//  ListTile _buildButtonToBuy(BuildContext context) {
+//    return ListTile(
+//      title: Text('A acheter', style: Theme.of(context).textTheme.overline),
+//      leading: Icon(Icons.exposure_zero),
+//      onTap: () {
+//        liquidsEmpty.clear();
+//        allLiquids.forEach((Liquid liquid) {
+//          if (liquid.quantity == 0) {
+//            liquidsEmpty.add(liquid);
+//          }
+//        });
+//        Navigator.of(context).pop();
+//        Navigator.of(context).push(
+//          MaterialPageRoute(
+//              builder: (context) => ListLiquidsPage(
+//                  liquidsEmpty, allLiquids, liquidService, "To buy, Bro")),
+//        );
+//      },
+//    );
+//  }
+//
+//  ListTile _buildButtonTemp(BuildContext context) {
+//    return ListTile(
+//      title: Text("temp"),
+//      onTap: () {
+//        Navigator.of(context).pop();
+//        Navigator.of(context).push(
+//          MaterialPageRoute(
+//              builder: (context) => FlutterDemo(storage: CounterStorage())),
+//        );
+//      },
+//    );
+//  }
+//}

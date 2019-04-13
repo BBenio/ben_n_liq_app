@@ -1,5 +1,6 @@
 import 'package:ben_n_liq_app/liquid.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating/flutter_rating.dart';
 
 class LiquidPage extends StatefulWidget {
   final Liquid _liquid;
@@ -34,7 +35,13 @@ class _LiquidPageState extends State<LiquidPage> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[_buildName(), _buildBrand(), _buildQuantity(), _buildButtons()],
+            children: <Widget>[
+              _buildName(),
+              _buildBrand(),
+              _buildQuantity(),
+              _buildButtons(),
+              _buildStars()
+            ],
           ),
         ));
   }
@@ -44,6 +51,7 @@ class _LiquidPageState extends State<LiquidPage> {
       child: Text(
         widget._liquid.name,
         style: Theme.of(context).primaryTextTheme.title,
+        textAlign: TextAlign.center,
       ),
     );
   }
@@ -73,6 +81,27 @@ class _LiquidPageState extends State<LiquidPage> {
         _buildButtonMinus(),
         _buildButtonAdd(),
       ],
+    );
+  }
+
+  Widget _buildStars() {
+    return Center(
+      child: Row(
+        children: <Widget>[
+          StarRating(
+            size: 25.0,
+            rating: widget._liquid.note,
+            color: Colors.orange,
+            borderColor: Colors.grey,
+            starCount: 5,
+            onRatingChanged: (rating) => setState(
+                  () {
+                    widget._liquid.note = rating;
+                  },
+                ),
+          ),
+        ],
+      ),
     );
   }
 

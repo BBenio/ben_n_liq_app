@@ -1,16 +1,18 @@
+import 'package:ben_n_liq_app/drawer.dart';
 import 'package:ben_n_liq_app/liquid.dart';
 import 'package:ben_n_liq_app/liquid_form.dart';
 import 'package:ben_n_liq_app/liquid_list.dart';
+import 'package:ben_n_liq_app/liquid_page.dart';
 import 'package:ben_n_liq_app/liquid_service.dart';
-import 'package:ben_n_liq_app/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ListLiquidsPage extends StatefulWidget {
-  final List<Liquid> _liquids;
-  final LiquidService liquidService;
+  final LiquidService _liquidService;
+  final DrawerActions _actions;
   final textAppBar;
 
-  ListLiquidsPage(this._liquids, this.liquidService, this.textAppBar);
+  ListLiquidsPage(this._liquidService, this._actions, this.textAppBar);
 
   @override
   _ListLiquidsPageState createState() => _ListLiquidsPageState();
@@ -18,26 +20,75 @@ class ListLiquidsPage extends StatefulWidget {
 
 class _ListLiquidsPageState extends State<ListLiquidsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final List<Liquid> _liquidsToShow = [];
+  final List<Liquid> _allLiquids = [];
 
+  @override
+  void initState() {
+    super.initState();
+    _buildList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       appBar: buildAppBar(context),
-      drawer: DrawerLiquids(widget.liquidService),
+      drawer: DrawerLiquids(widget._liquidService),
       floatingActionButton: buildFloatingActionButton(context),
-      body: LiquidList(widget._liquids, widget.liquidService, _scaffoldKey),
+      body: _buildBody(),
     );
   }
 
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      title: Text(
-        widget.textAppBar,
-        style: Theme.of(context).appBarTheme.textTheme.title,
-      ),
+  _buildList() {
+    widget._liquidService.loadLiquidsDirectory().then((List<Liquid> l) {
+      setState(() {
+        _allLiquids.addAll(l);
+        if (widget._actions == DrawerActions.AllLiquids) {
+          _liquidsToShow.addAll(_allLiquids);
+        }
+        if (widget._actions == DrawerActions.LiquidsEmpty) {
+          _allLiquids.forEach((Liquid liquid) {
+            if (liquid.quantity == 0) {
+              _liquidsToShow.add(liquid);
+            }
+          });
+        }
+        if (widget._actions == DrawerActions.LiquidsNotEmpty) {
+          _allLiquids.forEach((Liquid liquid) {
+            if (liquid.quantity > 0) {
+              _liquidsToShow.add(liquid);
+            }
+          });
+        }
+      });
+    });
+  }
+
+  _showDialogAddLiquid(BuildContext context) async {
+    Liquid liquid = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LiquidForm()),
     );
+
+    if (liquid != null) {
+      setState(() {
+        _allLiquids.add(liquid);
+        if (widget._actions == DrawerActions.AllLiquids ||
+            (widget._actions == DrawerActions.LiquidsNotEmpty &&
+                liquid.quantity > 0) ||
+            (widget._actions == DrawerActions.LiquidsEmpty &&
+                liquid.quantity == 0)) {
+          _liquidsToShow.add(liquid);
+        }
+      });
+      widget._liquidService
+          .saveLiquids(_allLiquids)
+          .then((f) => _scaffoldKey.currentState.showSnackBar(SnackBar(
+                content: Text('Enregistrés !'),
+                duration: Duration(seconds: 1),
+              )));
+    }
   }
 
   FloatingActionButton buildFloatingActionButton(BuildContext context) {
@@ -50,22 +101,87 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     );
   }
 
-  _showDialogAddLiquid(BuildContext context) async {
-    Liquid liquid = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => LiquidForm()),
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      title: Text(
+        widget.textAppBar,
+        style: Theme.of(context).appBarTheme.textTheme.title,
+      ),
     );
+  }
 
-    if (liquid != null) {
-      setState(() {
-        widget._liquids.add(liquid);
-      });
-      widget.liquidService
-          .saveLiquids(widget._liquids)
-          .then((f) => _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text('Enregistrés !'),
-        duration: Duration(seconds: 1),
-      )));
-    }
+  Widget _buildBody() {
+    return ListView.builder(
+      itemCount: _liquidsToShow.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Slidable(
+          closeOnScroll: true,
+          key: Key(_liquidsToShow[index].name + _liquidsToShow[index].brand),
+          child: buildLiquidTile(index, context),
+          delegate: SlidableDrawerDelegate(),
+          actionExtentRatio: 0.25,
+          actions: <Widget>[
+            IconSlideAction(
+              icon: Icons.delete_forever,
+              onTap: () => _deleteLiquid(index),
+              color: Colors.redAccent,
+              closeOnTap: true,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  ListTile buildLiquidTile(int index, BuildContext context) {
+    return ListTile(
+      key: Key(_liquidsToShow[index].name),
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => LiquidPage(
+                _liquidsToShow[index],
+                Key(_liquidsToShow[index].name),
+                saveLiquids: () {
+                  _saveLiquids();
+                },
+              ),
+        ));
+      },
+      title: buildTitle(index, context),
+      subtitle: buildSubtitle(index, context),
+    );
+  }
+
+  Text buildTitle(int index, BuildContext context) {
+    return Text(
+      _liquidsToShow[index].name,
+      style: Theme.of(context).textTheme.subhead,
+    );
+  }
+
+  Text buildSubtitle(int index, BuildContext context) {
+    return Text(
+      _liquidsToShow[index].quantity.toString(),
+      style: Theme.of(context).textTheme.subtitle,
+    );
+  }
+
+  _deleteLiquid(int index) {
+    setState(() {
+      _allLiquids.remove(_liquidsToShow.elementAt(index));
+      _liquidsToShow.removeAt(index);
+    });
+    widget._liquidService
+        .saveLiquids(_allLiquids)
+        .then((f) => _scaffoldKey.currentState.showSnackBar(SnackBar(
+              content: Text('Supprimé !'),
+              duration: Duration(seconds: 1),
+            )));
+  }
+
+  _saveLiquids() {
+    widget._liquidService
+        .saveLiquids(_allLiquids)
+        .then((f) => print("enregistré"));
   }
 }
