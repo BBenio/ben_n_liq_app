@@ -61,6 +61,8 @@ class _LiquidFormState extends State<LiquidForm> {
         onPressed: () {
           if (nameValidator && quantityValidator) {
             int quantity = int.tryParse(_controllerQuantity.text);
+            if (_controllerBrand.text == "")
+              _controllerBrand.text = "A&L";
 
             Liquid liquid =
                 Liquid(_controllerName.text, _controllerBrand.text, quantity);

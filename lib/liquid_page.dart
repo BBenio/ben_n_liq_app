@@ -61,6 +61,7 @@ class _LiquidPageState extends State<LiquidPage> {
       child: Text(
         widget._liquid.brand,
         style: Theme.of(context).primaryTextTheme.overline,
+        textAlign: TextAlign.center,
       ),
     );
   }
