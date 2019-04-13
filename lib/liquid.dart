@@ -2,24 +2,34 @@ class Liquid {
   String _name;
   String _brand;
   int _remainingQuantity;
-  double _note;
+  double _rate;
 
   Liquid(this._name, this._brand,
-      [this._remainingQuantity = 3, this._note = 0]);
+      [this._remainingQuantity = 3, this._rate = 0]);
 
   factory Liquid.fromJson(Map<String, dynamic> parsedJson) {
+    double rate = 0;
+    print("ntmp 1");
+    print(parsedJson['rate']);
+    if (parsedJson['rate'] != null) {
+      print("et la tu passes fdp");
+      rate = parsedJson['rate'];
+    }
+    print("ntmp4");
     return Liquid(
       parsedJson['name'],
       parsedJson['brand'],
       parsedJson['quantity'],
+      rate
     );
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'name': _name,
         'brand': _brand,
         'quantity': quantity,
-        'note': _note,
+        'rate': _rate,
       };
 
   void addOneQuantity() => this._remainingQuantity++;
@@ -43,8 +53,14 @@ class Liquid {
   }
 
   String get name => this._name;
-  double get note => this._note;
-  set note(double newNote) => this._note = newNote;
+
+  double get rating => this._rate;
+
+  set rating(double newRate) {
+    if (newRate >= 0 && newRate <= 5) this._rate = newRate;
+  }
+
   String get brand => this._brand;
+
   int get quantity => this._remainingQuantity;
 }

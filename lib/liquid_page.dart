@@ -13,14 +13,14 @@ class LiquidPage extends StatefulWidget {
 }
 
 class _LiquidPageState extends State<LiquidPage> {
-  String quan;
+  String quantity;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      quan = widget._liquid.quantity.toString();
+      quantity = widget._liquid.quantity.toString();
     });
   }
 
@@ -68,7 +68,7 @@ class _LiquidPageState extends State<LiquidPage> {
   Widget _buildQuantity() {
     return Center(
       child: Text(
-        quan,
+        quantity,
         style: Theme.of(context).primaryTextTheme.subtitle,
       ),
     );
@@ -87,19 +87,22 @@ class _LiquidPageState extends State<LiquidPage> {
   Widget _buildStars() {
     return Center(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           StarRating(
-            size: 25.0,
-            rating: widget._liquid.note,
-            color: Colors.orange,
-            borderColor: Colors.grey,
-            starCount: 5,
-            onRatingChanged: (rating) => setState(
+              size: 25.0,
+              rating: widget._liquid.rating,
+              color: Colors.orange,
+              borderColor: Colors.grey,
+              starCount: 5,
+              onRatingChanged: (rating) {
+                setState(
                   () {
-                    widget._liquid.note = rating;
+                    widget._liquid.rating = rating;
                   },
-                ),
-          ),
+                );
+                widget.saveLiquids();
+              }),
         ],
       ),
     );
@@ -121,7 +124,7 @@ class _LiquidPageState extends State<LiquidPage> {
     widget._liquid.addOneQuantity();
     widget.saveLiquids();
     setState(() {
-      quan = widget._liquid.quantity.toString();
+      quantity = widget._liquid.quantity.toString();
     });
   }
 
@@ -141,7 +144,7 @@ class _LiquidPageState extends State<LiquidPage> {
     widget._liquid.removeOneQuantity();
     widget.saveLiquids();
     setState(() {
-      quan = widget._liquid.quantity.toString();
+      quantity = widget._liquid.quantity.toString();
     });
   }
 }
