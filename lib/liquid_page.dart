@@ -15,6 +15,13 @@ class LiquidPage extends StatefulWidget {
 class _LiquidPageState extends State<LiquidPage> {
   String quantity;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  bool _buttonPressed = false;
+  bool _buttonAddPressed = false;
+  bool _buttonDecreasePressed = false;
+  bool _loopActive = false;
+  bool _loopAddActive = false;
+  bool _loopDecreaseActive = false;
+  int _counter = 0;
 
   @override
   void initState() {
@@ -81,20 +88,86 @@ class _LiquidPageState extends State<LiquidPage> {
       children: <Widget>[
         _buildButtonMinus(),
         _buildButtonAdd(),
+//        testbutton()
       ],
     );
+  }
+
+  Widget testbutton() {
+    return Listener(
+          onPointerDown: (details) {
+            print("appuyer");
+              _buttonPressed = true;
+            _increaseCounterWhilePressed();
+          },
+          onPointerUp: (details) {
+            print("relacher");
+              _buttonPressed = false;
+          },
+          child: Container(
+            decoration: BoxDecoration(color: Colors.orange, border: Border.all()),
+            padding: EdgeInsets.all(16.0),
+            child: Text('Value: $_counter'),
+          ),
+        );
+  }
+
+  void _increaseCounterWhilePressed() async {
+    print("bocle 1");
+    if (_loopActive) return;
+
+    _loopActive = true;
+
+    while (_buttonPressed) {
+      setState(() {
+        _counter++;
+      });
+
+      await Future.delayed(Duration(milliseconds: 200));
+    }
+    print("bocle 2");
+
+    _loopActive = false;
   }
 
   Widget _buildButtonAdd() {
     return Container(
       margin: EdgeInsets.all(10),
-      child: FloatingActionButton(
-        heroTag: 0,
-        child: Icon(Icons.plus_one),
-        onPressed: _onAddQuantity,
-        backgroundColor: Theme.of(context).buttonColor,
-      ),
+      child: Listener(
+        onPointerDown: (details) {
+          print("appuyer");
+          _buttonAddPressed = true;
+          _onAddQuantityWhilePressed();
+        },
+        onPointerUp: (details) {
+          print("relacher");
+          _buttonAddPressed = false;
+        },
+        child: FloatingActionButton(
+          heroTag: 0,
+          child: Icon(Icons.plus_one),
+          backgroundColor: Theme.of(context).buttonColor,
+        ),
+      )
     );
+  }
+
+  void _onAddQuantityWhilePressed() async {
+    if (_loopAddActive) return;
+
+    _loopAddActive = true;
+
+    while (_buttonAddPressed) {
+      widget._liquid.addOneQuantity();
+      setState(() {
+        quantity = widget._liquid.quantity.toString();
+      });
+
+      await Future.delayed(Duration(milliseconds: 200));
+    }
+    widget.saveLiquids();
+
+    _loopAddActive = false;
   }
 
   _onAddQuantity() {

@@ -8,10 +8,11 @@ Future main() async {
   LiquidService liquidService = LiquidService();
   List<Liquid> liquids = List<Liquid>();
 
-  liquids = await liquidService.loadLiquidsAssets();
+//  liquids = await liquidService.loadLiquidsAssets();
 //  liquids = await liquidService.loadLiquidsDirectory();
+//  liquids = await liquidService.loadLiquidsHistory();
 //  liquidService.saveLiquidsHistory(liquids);
-  liquidService.saveLiquids(liquids);
+//  liquidService.saveLiquids(liquids);
 
   runApp(MyApp(liquidService));
 }
