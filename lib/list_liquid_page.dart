@@ -166,10 +166,17 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     );
   }
 
-  Text _buildRate(int index, BuildContext context) {
-    return Text(
-      _liquidsToShow[index].rating.toString(),
-      style: Theme.of(context).textTheme.subtitle,
+  Widget _buildRate(int index, BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Text(
+          _liquidsToShow[index].rating.toString(),
+          style: Theme.of(context).textTheme.subtitle,
+        ),
+        Icon(Icons.star, color: Colors.orange, size: 15.0,)
+      ],
     );
   }
 
