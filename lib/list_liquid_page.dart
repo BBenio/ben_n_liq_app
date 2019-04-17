@@ -4,6 +4,7 @@ import 'package:ben_n_liq_app/liquid_form.dart';
 import 'package:ben_n_liq_app/liquid_page.dart';
 import 'package:ben_n_liq_app/liquid_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ListLiquidsPage extends StatefulWidget {
@@ -19,13 +20,22 @@ class ListLiquidsPage extends StatefulWidget {
 
 class _ListLiquidsPageState extends State<ListLiquidsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  bool show = true;
   final List<Liquid> _liquidsToShow = [];
   final List<Liquid> _allLiquids = [];
+  ScrollController _controller = ScrollController();
 
   @override
   void initState() {
+    _controller.addListener(listener);
     super.initState();
     _buildList();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(listener);
+    super.dispose();
   }
 
   @override
@@ -34,7 +44,8 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
       key: _scaffoldKey,
       appBar: _buildAppBar(context),
       drawer: DrawerLiquids(widget._liquidService),
-      floatingActionButton: _buildFloatingActionButton(context),
+      floatingActionButton:
+          show ? _buildFloatingActionButton(context) : Container(),
       body: _buildBody(),
     );
   }
@@ -112,6 +123,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
 
   Widget _buildBody() {
     return ListView.builder(
+      controller: _controller,
       itemCount: _liquidsToShow.length,
       itemBuilder: (BuildContext context, int index) {
         return Slidable(
@@ -176,7 +188,11 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
           _liquidsToShow[index].rating.toString(),
           style: Theme.of(context).textTheme.subtitle,
         ),
-        Icon(Icons.star, color: Colors.orange, size: 15.0,)
+        Icon(
+          Icons.star,
+          color: Colors.orange,
+          size: 15.0,
+        )
       ],
     );
   }
@@ -198,5 +214,14 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     widget._liquidService
         .saveLiquids(_allLiquids)
         .then((f) => print("enregistré"));
+  }
+
+  void listener() {
+    if (_controller.position.userScrollDirection == ScrollDirection.forward)
+      show = true;
+    else
+      show = false;
+
+    setState(() {});
   }
 }
