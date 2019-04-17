@@ -34,12 +34,14 @@ class _LiquidPageState extends State<LiquidPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: Text('${widget._liquid.name}',
-              style: Theme.of(context).appBarTheme.textTheme.title),
-        ),
-        body: Center(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text('${widget._liquid.name}',
+            style: Theme.of(context).appBarTheme.textTheme.title),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(10),
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -50,7 +52,9 @@ class _LiquidPageState extends State<LiquidPage> {
               _buildStars()
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildName() {
@@ -95,21 +99,21 @@ class _LiquidPageState extends State<LiquidPage> {
 
   Widget testbutton() {
     return Listener(
-          onPointerDown: (details) {
-            print("appuyer");
-              _buttonPressed = true;
-            _increaseCounterWhilePressed();
-          },
-          onPointerUp: (details) {
-            print("relacher");
-              _buttonPressed = false;
-          },
-          child: Container(
-            decoration: BoxDecoration(color: Colors.orange, border: Border.all()),
-            padding: EdgeInsets.all(16.0),
-            child: Text('Value: $_counter'),
-          ),
-        );
+      onPointerDown: (details) {
+        print("appuyer");
+        _buttonPressed = true;
+        _increaseCounterWhilePressed();
+      },
+      onPointerUp: (details) {
+        print("relacher");
+        _buttonPressed = false;
+      },
+      child: Container(
+        decoration: BoxDecoration(color: Colors.orange, border: Border.all()),
+        padding: EdgeInsets.all(16.0),
+        child: Text('Value: $_counter'),
+      ),
+    );
   }
 
   void _increaseCounterWhilePressed() async {
@@ -132,24 +136,24 @@ class _LiquidPageState extends State<LiquidPage> {
 
   Widget _buildButtonAdd() {
     return Container(
-      margin: EdgeInsets.all(10),
-      child: Listener(
-        onPointerDown: (details) {
-          print("appuyer");
-          _buttonAddPressed = true;
-          _onAddQuantityWhilePressed();
-        },
-        onPointerUp: (details) {
-          print("relacher");
-          _buttonAddPressed = false;
-        },
-        child: FloatingActionButton(
-          heroTag: 0,
-          child: Icon(Icons.plus_one),
-          backgroundColor: Theme.of(context).buttonColor,
-        ),
-      )
-    );
+        margin: EdgeInsets.all(10),
+        child: Listener(
+          onPointerDown: (details) {
+            print("appuyer");
+            _buttonAddPressed = true;
+            _onAddQuantityWhilePressed();
+          },
+          onPointerUp: (details) {
+            print("relacher");
+            _buttonAddPressed = false;
+          },
+          child: FloatingActionButton(
+            heroTag: 0,
+            child: Icon(Icons.plus_one),
+            backgroundColor: Theme.of(context).buttonColor,
+            onPressed: null,
+          ),
+        ));
   }
 
   void _onAddQuantityWhilePressed() async {
@@ -180,14 +184,42 @@ class _LiquidPageState extends State<LiquidPage> {
 
   Widget _buildButtonMinus() {
     return Container(
-      margin: EdgeInsets.all(10),
-      child: FloatingActionButton(
-        heroTag: 1,
-        child: Icon(Icons.exposure_neg_1),
-        onPressed: _onDecreaseQuantity,
-        backgroundColor: Colors.grey,
-      ),
-    );
+        margin: EdgeInsets.all(10),
+        child: Listener(
+          onPointerDown: (details) {
+            print("appuyer");
+            _buttonDecreasePressed = true;
+            _onDecreaseQuantityWhilePressed();
+          },
+          onPointerUp: (details) {
+            print("relacher");
+            _buttonDecreasePressed = false;
+          },
+          child: FloatingActionButton(
+            heroTag: 1,
+            child: Icon(Icons.exposure_neg_1),
+            onPressed: null,
+            backgroundColor: Colors.grey,
+          ),
+        ));
+  }
+
+  void _onDecreaseQuantityWhilePressed() async {
+    if (_loopDecreaseActive) return;
+
+    _loopDecreaseActive = true;
+
+    while (_buttonDecreasePressed) {
+      widget._liquid.removeOneQuantity();
+      setState(() {
+        quantity = widget._liquid.quantity.toString();
+      });
+
+      await Future.delayed(Duration(milliseconds: 200));
+    }
+    widget.saveLiquids();
+
+    _loopDecreaseActive = false;
   }
 
   _onDecreaseQuantity() {
@@ -204,19 +236,20 @@ class _LiquidPageState extends State<LiquidPage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           StarRating(
-              size: 25.0,
-              rating: widget._liquid.rating,
-              color: Colors.orange,
-              borderColor: Colors.grey,
-              starCount: 5,
-              onRatingChanged: (rating) {
-                setState(
-                      () {
-                    widget._liquid.rating = rating;
-                  },
-                );
-                widget.saveLiquids();
-              }),
+            size: 25.0,
+            rating: widget._liquid.rating,
+            color: Colors.orange,
+            borderColor: Colors.grey,
+            starCount: 5,
+            onRatingChanged: (rating) {
+              setState(
+                () {
+                  widget._liquid.rating = rating;
+                },
+              );
+              widget.saveLiquids();
+            },
+          ),
         ],
       ),
     );

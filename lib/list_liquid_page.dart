@@ -32,9 +32,9 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: buildAppBar(context),
+      appBar: _buildAppBar(context),
       drawer: DrawerLiquids(widget._liquidService),
-      floatingActionButton: buildFloatingActionButton(context),
+      floatingActionButton: _buildFloatingActionButton(context),
       body: _buildBody(),
     );
   }
@@ -90,7 +90,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     }
   }
 
-  FloatingActionButton buildFloatingActionButton(BuildContext context) {
+  FloatingActionButton _buildFloatingActionButton(BuildContext context) {
     return FloatingActionButton(
       child: Icon(Icons.add),
       onPressed: () {
@@ -100,7 +100,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     );
   }
 
-  AppBar buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       title: Text(
         widget.textAppBar,
@@ -116,7 +116,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
         return Slidable(
           closeOnScroll: true,
           key: Key(_liquidsToShow[index].name + _liquidsToShow[index].brand),
-          child: buildLiquidTile(index, context),
+          child: _buildLiquidTile(index, context),
           delegate: SlidableDrawerDelegate(),
           actionExtentRatio: 0.25,
           actions: <Widget>[
@@ -132,7 +132,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     );
   }
 
-  ListTile buildLiquidTile(int index, BuildContext context) {
+  ListTile _buildLiquidTile(int index, BuildContext context) {
     return ListTile(
       key: Key(_liquidsToShow[index].name),
       onTap: () {
@@ -146,21 +146,29 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
               ),
         ));
       },
-      title: buildTitle(index, context),
-      subtitle: buildSubtitle(index, context),
+      title: _buildTitle(index, context),
+      subtitle: _buildSubtitle(index, context),
+      trailing: _buildRate(index, context),
     );
   }
 
-  Text buildTitle(int index, BuildContext context) {
+  Text _buildTitle(int index, BuildContext context) {
     return Text(
       _liquidsToShow[index].name,
       style: Theme.of(context).textTheme.subhead,
     );
   }
 
-  Text buildSubtitle(int index, BuildContext context) {
+  Text _buildSubtitle(int index, BuildContext context) {
     return Text(
       _liquidsToShow[index].quantity.toString(),
+      style: Theme.of(context).textTheme.subtitle,
+    );
+  }
+
+  Text _buildRate(int index, BuildContext context) {
+    return Text(
+      _liquidsToShow[index].rating.toString(),
       style: Theme.of(context).textTheme.subtitle,
     );
   }
