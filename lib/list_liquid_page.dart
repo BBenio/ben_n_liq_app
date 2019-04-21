@@ -54,7 +54,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     widget._liquidService.loadLiquidsDirectory().then((List<Liquid> l) {
       setState(() {
         _allLiquids.addAll(l);
-        _allLiquids.sort((Liquid a, Liquid b) => a.name.compareTo(b.name));
+        _allLiquids.sort((Liquid a, Liquid b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         if (widget._actions == DrawerActions.AllLiquids) {
           _liquidsToShow.addAll(_allLiquids);
         }
