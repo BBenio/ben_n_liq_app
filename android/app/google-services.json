@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "22476154060",
+    "firebase_url": "https://ben-n-liq.firebaseio.com",
+    "project_id": "ben-n-liq",
+    "storage_bucket": "ben-n-liq.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22476154060:android:f81452164ed4ca56",
+        "android_client_info": {
+          "package_name": "app.bennliq.com.ben_n_liq_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22476154060-m4hbllogaogdut5skck21vbuno4497ss.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6NFQc0pBipzlhMomNtcWgLEfUwJhHv4k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22476154060-m4hbllogaogdut5skck21vbuno4497ss.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "22476154060-5ums57gentglr2m14opftdrda0ebrnn8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.bennliq.com.benNLiqApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
