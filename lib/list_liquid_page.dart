@@ -23,18 +23,41 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
   bool show = true;
   final List<Liquid> _liquidsToShow = [];
   final List<Liquid> _allLiquids = [];
-  ScrollController _controller = ScrollController();
+  ScrollController _scrollController = ScrollController();
+  Icon iconSearching = Icon(Icons.search);
+  final TextEditingController _controller = new TextEditingController();
+  bool _isSearching = false;
+  List<Liquid> _searchResults = new List<Liquid>();
+  Widget appBarTitle;
 
   @override
   void initState() {
-    _controller.addListener(listener);
+    new Future.delayed(Duration.zero, () {
+      appBarTitle = Text(
+        widget.textAppBar,
+        style: Theme.of(context).appBarTheme.textTheme.title,
+      );
+    });
+    _scrollController.addListener(listener);
     super.initState();
     _buildList();
+    _controller.addListener(() {
+      if (_controller.text.isEmpty) {
+        setState(() {
+          _isSearching = false;
+        });
+      } else {
+        setState(() {
+          _isSearching = true;
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
-    _controller.removeListener(listener);
+    _scrollController.removeListener(listener);
+    _controller.dispose();
     super.dispose();
   }
 
@@ -50,11 +73,75 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     );
   }
 
+  void _handleSearchStart() {
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _handleSearchEnd() {
+    setState(() {
+      _searchResults.clear();
+      this.iconSearching = new Icon(
+        Icons.search,
+        color: Colors.white,
+      );
+      this.appBarTitle = Text(
+        widget.textAppBar,
+        style: Theme.of(context).appBarTheme.textTheme.title,
+      );
+      _isSearching = false;
+      _controller.clear();
+    });
+  }
+
+  void _onSearchingOperation(String searchText) {
+    _searchResults.clear();
+    if (_isSearching != null) {
+      for (int i = 0; i < _liquidsToShow.length; i++) {
+        String data = _liquidsToShow[i].name;
+        if (data.toLowerCase().contains(searchText.toLowerCase())) {
+          _searchResults.add(_liquidsToShow[i]);
+        }
+      }
+    }
+  }
+
+  Widget _buildSearchButton() {
+    return IconButton(
+      icon: iconSearching,
+      onPressed: () {
+        setState(() {
+          if (iconSearching.icon == Icons.search) {
+            iconSearching = Icon(
+              Icons.close,
+              color: Colors.white,
+            );
+            this.appBarTitle = TextField(
+              controller: _controller,
+              style: Theme.of(context).textTheme.button,
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search, color: Colors.white),
+                  hintText: "Search...",
+                  hintStyle: TextStyle(color: Colors.white)),
+              onChanged: _onSearchingOperation,
+              autofocus: true,
+            );
+            _handleSearchStart();
+          } else {
+            _handleSearchEnd();
+          }
+        });
+      },
+    );
+  }
+
   _buildList() {
     widget._liquidService.loadLiquidsDirectory().then((List<Liquid> l) {
       setState(() {
         _allLiquids.addAll(l);
-        _allLiquids.sort((Liquid a, Liquid b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        _allLiquids.sort((Liquid a, Liquid b) =>
+            a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         if (widget._actions == DrawerActions.AllLiquids) {
           _liquidsToShow.addAll(_allLiquids);
         }
@@ -114,22 +201,45 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      title: Text(
-        widget.textAppBar,
-        style: Theme.of(context).appBarTheme.textTheme.title,
-      ),
+      title: appBarTitle,
+      actions: <Widget>[_buildSearchButton()],
     );
   }
 
   Widget _buildBody() {
+    if (_isSearching &&
+        (_searchResults.length != 0 || _controller.text.isNotEmpty)) {
+      return ListView.builder(
+        controller: _scrollController,
+        itemCount: _searchResults.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Slidable(
+            closeOnScroll: true,
+            key: Key(_searchResults[index].name + _searchResults[index].brand),
+            child: _buildLiquidTile(_searchResults, index, context),
+            delegate: SlidableDrawerDelegate(),
+            actionExtentRatio: 0.25,
+            actions: <Widget>[
+              IconSlideAction(
+                icon: Icons.delete_forever,
+                onTap: () => _deleteLiquid(index),
+                color: Colors.redAccent,
+                closeOnTap: true,
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return ListView.builder(
-      controller: _controller,
+      controller: _scrollController,
       itemCount: _liquidsToShow.length,
       itemBuilder: (BuildContext context, int index) {
         return Slidable(
           closeOnScroll: true,
           key: Key(_liquidsToShow[index].name + _liquidsToShow[index].brand),
-          child: _buildLiquidTile(index, context),
+          child: _buildLiquidTile(_liquidsToShow, index, context),
           delegate: SlidableDrawerDelegate(),
           actionExtentRatio: 0.25,
           actions: <Widget>[
@@ -145,47 +255,48 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     );
   }
 
-  ListTile _buildLiquidTile(int index, BuildContext context) {
+  ListTile _buildLiquidTile(
+      List<Liquid> liquids, int index, BuildContext context) {
     return ListTile(
-      key: Key(_liquidsToShow[index].name),
+      key: Key(liquids[index].name),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => LiquidPage(
-                _liquidsToShow[index],
-                Key(_liquidsToShow[index].name),
+                liquids[index],
+                Key(liquids[index].name),
                 saveLiquids: () {
                   _saveLiquids();
                 },
               ),
         ));
       },
-      title: _buildTitle(index, context),
-      subtitle: _buildSubtitle(index, context),
-      trailing: _buildRate(index, context),
+      title: _buildTitle(liquids[index], index, context),
+      subtitle: _buildSubtitle(liquids[index], index, context),
+      trailing: _buildRate(liquids[index], index, context),
     );
   }
 
-  Text _buildTitle(int index, BuildContext context) {
+  Text _buildTitle(Liquid liquid, int index, BuildContext context) {
     return Text(
-      _liquidsToShow[index].name,
+      liquid.name,
       style: Theme.of(context).textTheme.subhead,
     );
   }
 
-  Text _buildSubtitle(int index, BuildContext context) {
+  Text _buildSubtitle(Liquid liquid, int index, BuildContext context) {
     return Text(
-      _liquidsToShow[index].quantity.toString(),
+      liquid.quantity.toString(),
       style: Theme.of(context).textTheme.subtitle,
     );
   }
 
-  Widget _buildRate(int index, BuildContext context) {
+  Widget _buildRate(Liquid liquid, int index, BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text(
-          _liquidsToShow[index].rating.toString(),
+          liquid.rating.toString(),
           style: Theme.of(context).textTheme.subtitle,
         ),
         Icon(
@@ -217,7 +328,8 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
   }
 
   void listener() {
-    if (_controller.position.userScrollDirection == ScrollDirection.forward)
+    if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.forward)
       show = true;
     else
       show = false;
