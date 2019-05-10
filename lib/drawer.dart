@@ -23,7 +23,6 @@ class DrawerLiquids extends StatelessWidget {
           _buildButtonHome(context),
           _buildButtonToBuy(context),
           _buildButtonAllLiquids(context),
-          _buildButtonTemp(context)
         ],
       ),
     );

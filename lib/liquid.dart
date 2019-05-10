@@ -48,6 +48,10 @@ class Liquid {
     return false;
   }
 
+  String toString() {
+    return "$name, $_rate/5★";
+  }
+
   String get name => this._name;
 
   double get rating => this._rate;

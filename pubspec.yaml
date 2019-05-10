@@ -27,6 +27,7 @@ dependencies:
   path_provider: 0.4.1
   flutter_rating: ^0.0.2
   cloud_firestore: ^0.9.13+1
+  clipboard_plugin: ^0.0.1
 
 dev_dependencies:
   flutter_test:

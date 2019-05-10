@@ -6,6 +6,7 @@ import 'package:ben_n_liq_app/liquid_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:clipboard_plugin/clipboard_plugin.dart';
 
 class ListLiquidsPage extends StatefulWidget {
   final LiquidService _liquidService;
@@ -81,17 +82,22 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
 
   void _handleSearchEnd() {
     setState(() {
-      _searchResults.clear();
-      this.iconSearching = new Icon(
-        Icons.search,
-        color: Colors.white,
-      );
-      this.appBarTitle = Text(
-        widget.textAppBar,
-        style: Theme.of(context).appBarTheme.textTheme.title,
-      );
-      _isSearching = false;
-      _controller.clear();
+      if (_controller.text.isEmpty) {
+        _searchResults.clear();
+        this.iconSearching = new Icon(
+          Icons.search,
+          color: Colors.white,
+        );
+        this.appBarTitle = Text(
+          widget.textAppBar,
+          style: Theme.of(context).appBarTheme.textTheme.title,
+        );
+        _isSearching = false;
+        _controller.clear();
+      } else {
+        _searchResults.clear();
+        _controller.clear();
+      }
     });
   }
 
@@ -134,6 +140,38 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
         });
       },
     );
+  }
+
+  Widget _buildCopyButton() {
+    return IconButton(
+      icon: Icon(Icons.content_copy),
+      onPressed: _handleCopy,
+    );
+  }
+
+  _handleCopy() {
+    _liquidsToString(_liquidsToShow).then((String stringResult) {
+      ClipboardPlugin.copyToClipBoard(stringResult).then((result) {
+        final snackBar = SnackBar(
+          content: Text('Copié'),
+          duration: Duration(seconds: 2),
+          action: SnackBarAction(
+            label: 'Ok',
+            onPressed: () {},
+          ),
+        );
+        _scaffoldKey.currentState..showSnackBar(snackBar);
+//        Scaffold.of(context).showSnackBar(snackBar);
+      });
+    });
+  }
+
+  Future<String> _liquidsToString(List<Liquid> liquids) async {
+    String liquidsString = "";
+    liquids.forEach((liquid) {
+      liquidsString += "${liquid.toString()}\n";
+    });
+    return liquidsString;
   }
 
   _buildList() {
@@ -202,7 +240,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       title: appBarTitle,
-      actions: <Widget>[_buildSearchButton()],
+      actions: <Widget>[_buildCopyButton(), _buildSearchButton()],
     );
   }
 
