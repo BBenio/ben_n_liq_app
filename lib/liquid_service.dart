@@ -18,7 +18,7 @@ class LiquidService {
 
   Future<File> get _localFileHistory async {
     final path = await _localPath;
-    return File('$path/liquids2.json');
+    return File('$path/liquids_history.json');
   }
 
   Future<String> _loadALiquidAsset() async {

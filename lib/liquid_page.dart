@@ -221,14 +221,6 @@ class _LiquidPageState extends State<LiquidPage> {
     _loopDecreaseActive = false;
   }
 
-  _onDecreaseQuantity() {
-    widget._liquid.removeOneQuantity();
-    widget.saveLiquids();
-    setState(() {
-      quantity = widget._liquid.quantity.toString();
-    });
-  }
-
   Widget _buildStars() {
     return Center(
       child: Row(

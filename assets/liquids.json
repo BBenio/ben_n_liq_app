@@ -25,8 +25,53 @@
     "quantity": 0
   },
   {
-    "name": "fuck",
+    "name": "Aloe Vera",
     "brand": "A&L",
-    "quantity": 3
+    "quantity": 0
+  },
+  {
+    "name": "Bahamut",
+    "brand": "A&L",
+    "quantity": 0
+  },
+  {
+    "name": "Cassis mangue",
+    "brand": "A&L",
+    "quantity": 0
+  },
+  {
+    "name": "Goyave",
+    "brand": "A&L",
+    "quantity": 0
+  },
+  {
+    "name": "Guanabana",
+    "brand": "A&L",
+    "quantity": 0
+  },
+  {
+    "name": "Mangue ananas passion",
+    "brand": "A&L",
+    "quantity": 0
+  },
+  {
+    "name": "Manguo",
+    "brand": "A&L",
+    "quantity": 0
+  },
+  {
+    "name": "Red astaire",
+    "brand": "A&L",
+    "quantity": 0
+  },
+  {
+    "name": "Shiva",
+    "brand": "A&L",
+    "quantity": 0
+  },
+  {
+    "name": "Valkyri",
+    "brand": "A&L",
+    "quantity": 0
   }
 ]
