@@ -40,14 +40,6 @@ class Liquid {
     return false;
   }
 
-  bool removeQuantity(int quantity) {
-    if (this._remainingQuantity - quantity >= 0) {
-      this._remainingQuantity -= quantity;
-      return true;
-    }
-    return false;
-  }
-
   String toString() {
     return "$name, $_rate/5★";
   }

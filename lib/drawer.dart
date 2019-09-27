@@ -1,6 +1,5 @@
 import 'package:ben_n_liq_app/liquid_service.dart';
 import 'package:ben_n_liq_app/list_liquid_page.dart';
-import 'package:ben_n_liq_app/parser.dart';
 import 'package:flutter/material.dart';
 
 enum DrawerActions {
@@ -86,19 +85,6 @@ class DrawerLiquids extends StatelessWidget {
           MaterialPageRoute(
               builder: (context) => ListLiquidsPage(
                   liquidService, DrawerActions.LiquidsEmpty, "To buy, Bro")),
-        );
-      },
-    );
-  }
-
-  ListTile _buildButtonTemp(BuildContext context) {
-    return ListTile(
-      title: Text("temp"),
-      onTap: () {
-        Navigator.of(context).pop();
-        Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context) => FlutterDemo(storage: CounterStorage())),
         );
       },
     );
