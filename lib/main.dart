@@ -1,18 +1,28 @@
+import 'dart:io';
+
 import 'package:ben_n_liq_app/drawer.dart';
-import 'package:ben_n_liq_app/liquid.dart';
 import 'package:ben_n_liq_app/liquid_service.dart';
 import 'package:ben_n_liq_app/list_liquid_page.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 Future main() async {
-  LiquidService liquidService = LiquidService();
-  List<Liquid> liquids = List<Liquid>();
+  WidgetsFlutterBinding.ensureInitialized();
 
-//  liquids = await liquidService.loadLiquidsAssets();
+  if (Platform.isAndroid) {
+    PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+    while(!(permission == PermissionStatus.granted)) {
+      await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+      permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+    }
+  }
+
+  LiquidService liquidService = LiquidService();
+//  List<Liquid> liquids = List<Liquid>();
+
 //  liquids = await liquidService.loadLiquidsDirectory();
-//  liquids = await liquidService.loadLiquidsHistory();
-//  liquidService.saveLiquidsHistory(liquids);
 //  liquidService.saveLiquids(liquids);
+//  liquidService.saveVisibleLiquids(liquids);
 
   runApp(MyApp(liquidService));
 }

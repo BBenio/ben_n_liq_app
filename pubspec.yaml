@@ -27,6 +27,7 @@ dependencies:
   path_provider: 0.4.1
   flutter_rating: ^0.0.2
   clipboard_plugin: ^0.0.1
+  permission_handler: '^3.2.0'
 
 dev_dependencies:
   flutter_test:
@@ -54,10 +55,6 @@ flutter:
 
   # For details regarding adding assets from package dependencies, see
   # https://flutter.io/assets-and-images/#from-packages
-
-  assets:
-    - assets/liquids.json
-    - assets/liquid.json
 
   fonts:
      - family: IndieFlower

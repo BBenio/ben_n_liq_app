@@ -174,7 +174,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
   }
 
   _buildList() {
-    widget._liquidService.loadLiquidsDirectory().then((List<Liquid> l) {
+    widget._liquidService.loadVisibleLiquidsDirectory().then((List<Liquid> l) {
       setState(() {
         _allLiquids.addAll(l);
         _allLiquids.sort((Liquid a, Liquid b) =>
@@ -218,7 +218,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
         }
       });
       widget._liquidService
-          .saveLiquids(_allLiquids)
+          .saveVisibleLiquids(_allLiquids)
           .then((f) => _scaffoldKey.currentState.showSnackBar(SnackBar(
                 content: Text('Enregistrés !'),
                 duration: Duration(seconds: 1),
@@ -351,7 +351,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
       _liquidsToShow.removeAt(index);
     });
     widget._liquidService
-        .saveLiquids(_allLiquids)
+        .saveVisibleLiquids(_allLiquids)
         .then((f) => _scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text('Supprimé !'),
               duration: Duration(seconds: 1),
@@ -360,7 +360,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
 
   _saveLiquids() {
     widget._liquidService
-        .saveLiquids(_allLiquids)
+        .saveVisibleLiquids(_allLiquids)
         .then((f) => print("enregistré"));
   }
 
