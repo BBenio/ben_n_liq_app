@@ -48,6 +48,7 @@ class _LiquidPageState extends State<LiquidPage> {
               _buildName(),
               _buildBrand(),
               _buildQuantity(),
+              _buildPrice(),
               _buildButtons(),
               _buildStars()
             ],
@@ -71,6 +72,16 @@ class _LiquidPageState extends State<LiquidPage> {
     return Center(
       child: Text(
         widget._liquid.brand,
+        style: Theme.of(context).primaryTextTheme.overline,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildPrice() {
+    return Center(
+      child: Text(
+        widget._liquid.price.toString() + "€",
         style: Theme.of(context).primaryTextTheme.overline,
         textAlign: TextAlign.center,
       ),

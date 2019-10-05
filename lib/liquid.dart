@@ -2,21 +2,25 @@ class Liquid {
   String _name;
   String _brand;
   int _remainingQuantity;
-  double _rate;
+  double _rate, _price;
 
   Liquid(this._name, this._brand,
-      [this._remainingQuantity = 3, this._rate = 0]);
+      [this._remainingQuantity = 3, this._rate = 0, this._price = 0]);
 
   factory Liquid.fromJson(Map<String, dynamic> parsedJson) {
-    double rate = 0;
+    double rate, price = 0;
     if (parsedJson['rate'] != null) {
       rate = parsedJson['rate'];
+    }
+    if (parsedJson['price'] != null) {
+      price = parsedJson['price'];
     }
     return Liquid(
       parsedJson['name'],
       parsedJson['brand'],
       parsedJson['quantity'],
-      rate
+      rate,
+      price
     );
   }
 
@@ -26,6 +30,7 @@ class Liquid {
         'brand': _brand,
         'quantity': quantity,
         'rate': _rate,
+        'price': _price
       };
 
   void addOneQuantity() => this._remainingQuantity++;
@@ -50,6 +55,12 @@ class Liquid {
 
   set rating(double newRate) {
     if (newRate >= 0 && newRate <= 5) this._rate = newRate;
+  }
+
+  double get price => this._price;
+
+  set price(double newRate) {
+    if (newRate >= 0) this._rate = newRate;
   }
 
   String get brand => this._brand;

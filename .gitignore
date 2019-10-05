@@ -1,6 +1,6 @@
 android/app/google-services.json
-# Created by https://www.gitignore.io/api/android,androidstudio
-# Edit at https://www.gitignore.io/?templates=android,androidstudio
+# Created by https://www.gitignore.io/api/flutter,android,androidstudio
+# Edit at https://www.gitignore.io/?templates=flutter,android,androidstudio
 
 ### Android ###
 # Built application files
@@ -18,6 +18,7 @@ android/app/google-services.json
 bin/
 gen/
 out/
+release/
 
 # Gradle files
 .gradle/
@@ -46,10 +47,11 @@ captures/
 .idea/assetWizardSettings.xml
 .idea/dictionaries
 .idea/libraries
-.idea/caches
 # Android Studio 3 in .gitignore file.
-.idea/caches/build_file_checksums.ser
+.idea/caches
 .idea/modules.xml
+# Comment next line if keeping position of elements in Navigation Editor is relevant for you
+.idea/navEditor.xml
 
 # Keystore files
 # Uncomment the following lines if you do not want to check your keystore files in.
@@ -87,6 +89,62 @@ lint/tmp/
 ### Android Patch ###
 gen-external-apklibs
 output.json
+
+# Replacement of .externalNativeBuild directories introduced
+# with Android Studio 3.5.
+.cxx/
+
+### Flutter ###
+# Flutter/Dart/Pub related
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.packages
+.pub-cache/
+.pub/
+
+# Android related
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+
+# iOS/XCode related
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.moved-aside
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/*sync/
+**/ios/**/.sconsign.dblite
+**/ios/**/.tags*
+**/ios/**/.vagrant/
+**/ios/**/DerivedData/
+**/ios/**/Icon?
+**/ios/**/Pods/
+**/ios/**/.symlinks/
+**/ios/**/profile
+**/ios/**/xcuserdata
+**/ios/.generated/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# Exceptions to above rules.
+!**/ios/**/default.mode1v3
+!**/ios/**/default.mode2v3
+!**/ios/**/default.pbxuser
+!**/ios/**/default.perspectivev3
+!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 ### AndroidStudio ###
 # Covers files to be ignored for android development using Android Studio.
@@ -196,86 +254,4 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 
-# End of https://www.gitignore.io/api/android,androidstudio
-
-android/.idea/caches/
-android/.idea/workspace.xml
-
-android/.idea/caches/
-android/.idea/libraries/
-android/.idea/shelf/
-android/.idea/.name
-android/.idea/compiler.xml
-android/.idea/copyright/profiles_settings.xml
-android/.idea/encodings.xml
-android/.idea/misc.xml
-android/.idea/scopes/scope_settings.xml
-android/.idea/vcs.xml
-android/.idea/jsLibraryMappings.xml
-android/.idea/datasources.xml
-android/.idea/dataSources.ids
-android/.idea/sqlDataSources.xml
-android/.idea/dynamic.xml
-android/.idea/uiDesigner.xml
-ios/Podfile
-
-
-# Created by https://www.gitignore.io/api/flutter
-# Edit at https://www.gitignore.io/?templates=flutter
-
-### Flutter ###
-# Flutter/Dart/Pub related
-**/doc/api/
-.dart_tool/
-.flutter-plugins
-.packages
-.pub-cache/
-.pub/
-build/
-
-# Android related
-**/android/**/gradle-wrapper.jar
-**/android/.gradle
-**/android/captures/
-**/android/gradlew
-**/android/gradlew.bat
-**/android/local.properties
-**/android/**/GeneratedPluginRegistrant.java
-
-# iOS/XCode related
-**/ios/**/*.mode1v3
-**/ios/**/*.mode2v3
-**/ios/**/*.moved-aside
-**/ios/**/*.pbxuser
-**/ios/**/*.perspectivev3
-**/ios/**/*sync/
-**/ios/**/.sconsign.dblite
-**/ios/**/.tags*
-**/ios/**/.vagrant/
-**/ios/**/DerivedData/
-**/ios/**/Icon?
-**/ios/**/Pods/
-**/ios/**/.symlinks/
-**/ios/**/profile
-**/ios/**/xcuserdata
-**/ios/.generated/
-**/ios/Flutter/App.framework
-**/ios/Flutter/Flutter.framework
-**/ios/Flutter/Generated.xcconfig
-**/ios/Flutter/app.flx
-**/ios/Flutter/app.zip
-**/ios/Flutter/flutter_assets/
-**/ios/ServiceDefinitions.json
-**/ios/Runner/GeneratedPluginRegistrant.*
-
-# Exceptions to above rules.
-!**/ios/**/default.mode1v3
-!**/ios/**/default.mode2v3
-!**/ios/**/default.pbxuser
-!**/ios/**/default.perspectivev3
-!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-
-# End of https://www.gitignore.io/api/flutter
-
-
-
+# End of https://www.gitignore.io/api/flutter,android,androidstudio
