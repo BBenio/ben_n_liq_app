@@ -1,4 +1,5 @@
 import 'package:ben_n_liq_app/liquid.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 
@@ -27,7 +28,7 @@ class _LiquidPageState extends State<LiquidPage> {
   void initState() {
     super.initState();
     setState(() {
-      quantity = widget._liquid.quantity.toString();
+      quantity = widget._liquid.remainingQuantity.toString();
     });
   }
 
@@ -39,20 +40,33 @@ class _LiquidPageState extends State<LiquidPage> {
         title: Text('${widget._liquid.name}',
             style: Theme.of(context).appBarTheme.textTheme.title),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(10),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _buildName(),
-              _buildBrand(),
-              _buildQuantity(),
-              _buildPrice(),
-              _buildButtons(),
-              _buildStars()
-            ],
-          ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Expanded(
+              child: Column(
+                children: <Widget>[
+                  _buildName(),
+                  _buildBrand(),
+                  _buildPrice()
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: new Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: Column(
+                    children: <Widget>[
+                      _buildButtons(),
+                      _buildStars(),
+                    ],
+                  )
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -64,16 +78,23 @@ class _LiquidPageState extends State<LiquidPage> {
         widget._liquid.name,
         style: Theme.of(context).primaryTextTheme.title,
         textAlign: TextAlign.center,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
   Widget _buildBrand() {
-    return Center(
-      child: Text(
-        widget._liquid.brand,
-        style: Theme.of(context).primaryTextTheme.overline,
-        textAlign: TextAlign.center,
+    return Container(
+      padding: EdgeInsets.all(20),
+      child: Center(
+        child: Text(
+          widget._liquid.brand,
+          style: Theme.of(context).primaryTextTheme.overline,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
     );
   }
@@ -89,10 +110,14 @@ class _LiquidPageState extends State<LiquidPage> {
   }
 
   Widget _buildQuantity() {
-    return Center(
-      child: Text(
-        quantity,
-        style: Theme.of(context).primaryTextTheme.subtitle,
+    return Container(
+      width: MediaQuery.of(context).size.width / 2,
+      child:Center(
+        child: Text(
+          quantity,
+          style: Theme.of(context).primaryTextTheme.overline,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
@@ -102,6 +127,7 @@ class _LiquidPageState extends State<LiquidPage> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         _buildButtonMinus(),
+        _buildQuantity(),
         _buildButtonAdd(),
       ],
     );
@@ -127,7 +153,6 @@ class _LiquidPageState extends State<LiquidPage> {
   }
 
   void _increaseCounterWhilePressed() async {
-    print("bocle 1");
     if (_loopActive) return;
 
     _loopActive = true;
@@ -139,7 +164,6 @@ class _LiquidPageState extends State<LiquidPage> {
 
       await Future.delayed(Duration(milliseconds: 200));
     }
-    print("bocle 2");
 
     _loopActive = false;
   }
@@ -174,7 +198,7 @@ class _LiquidPageState extends State<LiquidPage> {
     while (_buttonAddPressed) {
       widget._liquid.addOneQuantity();
       setState(() {
-        quantity = widget._liquid.quantity.toString();
+        quantity = widget._liquid.remainingQuantity.toString();
       });
 
       await Future.delayed(Duration(milliseconds: 200));
@@ -188,7 +212,7 @@ class _LiquidPageState extends State<LiquidPage> {
     widget._liquid.addOneQuantity();
     widget.saveLiquids();
     setState(() {
-      quantity = widget._liquid.quantity.toString();
+      quantity = widget._liquid.remainingQuantity.toString();
     });
   }
 
@@ -222,7 +246,7 @@ class _LiquidPageState extends State<LiquidPage> {
     while (_buttonDecreasePressed) {
       widget._liquid.removeOneQuantity();
       setState(() {
-        quantity = widget._liquid.quantity.toString();
+        quantity = widget._liquid.remainingQuantity.toString();
       });
 
       await Future.delayed(Duration(milliseconds: 200));

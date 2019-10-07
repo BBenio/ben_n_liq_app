@@ -11,7 +11,12 @@ class LiquidService {
   }
 
   Future<String> get _localVisiblePath async {
-    final directory = await getExternalStorageDirectory();
+    Directory directory;
+    if (Platform.isAndroid) {
+      directory = await getExternalStorageDirectory();
+    } else if (Platform.isIOS) {
+      directory = await getApplicationDocumentsDirectory();
+    }
     return directory.path;
   }
 
@@ -22,10 +27,13 @@ class LiquidService {
 
   Future<File> get _localVisibleFile async {
     final path = await _localVisiblePath;
-    if (!(await Directory('$path/BenNLiq').exists())) {
+    if (Platform.isAndroid) {
+      if (!(await Directory('$path/BenNLiq').exists())) {
       new Directory('$path/BenNLiq').create();
+      }
+      return File('$path/BenNLiq/liquids.json');
     }
-    return File('$path/BenNLiq/liquids.json');
+    return File('$path/liquids.json');
   }
 
   Future<List<Liquid>> loadLiquidsDirectory() async {

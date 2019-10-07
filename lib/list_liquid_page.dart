@@ -184,14 +184,14 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
         }
         if (widget._actions == DrawerActions.LiquidsEmpty) {
           _allLiquids.forEach((Liquid liquid) {
-            if (liquid.quantity == 0) {
+            if (liquid.remainingQuantity == 0) {
               _liquidsToShow.add(liquid);
             }
           });
         }
         if (widget._actions == DrawerActions.LiquidsNotEmpty) {
           _allLiquids.forEach((Liquid liquid) {
-            if (liquid.quantity > 0) {
+            if (liquid.remainingQuantity > 0) {
               _liquidsToShow.add(liquid);
             }
           });
@@ -211,9 +211,9 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
         _allLiquids.add(liquid);
         if (widget._actions == DrawerActions.AllLiquids ||
             (widget._actions == DrawerActions.LiquidsNotEmpty &&
-                liquid.quantity > 0) ||
+                liquid.remainingQuantity > 0) ||
             (widget._actions == DrawerActions.LiquidsEmpty &&
-                liquid.quantity == 0)) {
+                liquid.remainingQuantity == 0)) {
           _liquidsToShow.add(liquid);
         }
       });
@@ -317,12 +317,14 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     return Text(
       liquid.name,
       style: Theme.of(context).textTheme.subhead,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis
     );
   }
 
   Text _buildSubtitle(Liquid liquid, int index, BuildContext context) {
     return Text(
-      liquid.quantity.toString(),
+      liquid.remainingQuantity.toString(),
       style: Theme.of(context).textTheme.subtitle,
     );
   }
