@@ -51,32 +51,32 @@ class MyApp extends StatelessWidget {
         bottomAppBarColor: Colors.redAccent,
         textTheme: TextTheme(
           body1: TextStyle(
-              color: Colors.grey, fontFamily: 'IndieFlower', fontSize: 25.0),
+              color: Colors.grey, fontFamily: 'Raleway', fontSize: 25.0),
           subhead: TextStyle(
-              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 20.0),
+              color: Colors.black, fontFamily: 'Raleway', fontSize: 20.0),
           subtitle: TextStyle(
-              color: Colors.grey, fontFamily: 'IndieFlower', fontSize: 15.0),
+              color: Colors.grey, fontFamily: 'Raleway', fontSize: 15.0),
           button: TextStyle(
-              color: Colors.white, fontFamily: 'IndieFlower', fontSize: 20.0),
+              color: Colors.white, fontFamily: 'Raleway', fontSize: 20.0),
           title: TextStyle(
-              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 50.0),
+              color: Colors.black, fontFamily: 'Raleway', fontSize: 50.0),
           overline: TextStyle(
-              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 20.0),
+              color: Colors.black, fontFamily: 'Raleway', fontSize: 20.0),
         ),
         appBarTheme: AppBarTheme(
           textTheme: TextTheme(
             title: TextStyle(
-                color: Colors.white, fontFamily: 'IndieFlower', fontSize: 25.0),
+                color: Colors.white, fontFamily: 'Raleway', fontSize: 25.0),
           ),
           color: Colors.red,
         ),
         primaryTextTheme: TextTheme(
           title: TextStyle(
-              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 50.0),
+              color: Colors.black, fontFamily: 'Raleway', fontSize: 50.0),
           subtitle: TextStyle(
-              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 40.0),
+              color: Colors.black, fontFamily: 'Raleway', fontSize: 40.0),
           overline: TextStyle(
-              color: Colors.grey, fontFamily: 'IndieFlower', fontSize: 25.0),
+              color: Colors.grey, fontFamily: 'Raleway', fontSize: 25.0),
         ),
         buttonColor: Colors.red,
         disabledColor: Color.fromRGBO(223, 177, 180, 0.0),
@@ -117,41 +117,14 @@ class MyErrorPage extends StatelessWidget {
     return MaterialApp(
       title: 'Ben\'n\'Liq',
       theme: ThemeData(
-        primaryColor: Colors.red,
-        textSelectionColor: Colors.red,
-        backgroundColor: Colors.red,
-        bottomAppBarColor: Colors.redAccent,
         textTheme: TextTheme(
-          body1: TextStyle(
-              color: Colors.grey, fontFamily: 'IndieFlower', fontSize: 25.0),
           subhead: TextStyle(
-              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 20.0),
+              color: Colors.black, fontFamily: 'Raleway', fontSize: 20.0),
           subtitle: TextStyle(
-              color: Colors.grey, fontFamily: 'IndieFlower', fontSize: 15.0),
-          button: TextStyle(
-              color: Colors.white, fontFamily: 'IndieFlower', fontSize: 20.0),
+              color: Colors.grey, fontFamily: 'Raleway', fontSize: 15.0),
           title: TextStyle(
-              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 50.0),
-          overline: TextStyle(
-              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 20.0),
+              color: Colors.black, fontFamily: 'Raleway', fontSize: 40.0),
         ),
-        appBarTheme: AppBarTheme(
-          textTheme: TextTheme(
-            title: TextStyle(
-                color: Colors.white, fontFamily: 'IndieFlower', fontSize: 25.0),
-          ),
-          color: Colors.red,
-        ),
-        primaryTextTheme: TextTheme(
-          title: TextStyle(
-              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 50.0),
-          subtitle: TextStyle(
-              color: Colors.black, fontFamily: 'IndieFlower', fontSize: 40.0),
-          overline: TextStyle(
-              color: Colors.grey, fontFamily: 'IndieFlower', fontSize: 25.0),
-        ),
-        buttonColor: Colors.red,
-        disabledColor: Color.fromRGBO(223, 177, 180, 0.0),
       ),
       home: ErrorStoragePage(),
       debugShowCheckedModeBanner: false,
@@ -174,11 +147,20 @@ class _ErrorStoragePageState extends State<ErrorStoragePage> {
     return Scaffold(
       key: _scaffoldKey,
       body: AlertDialog(
-          title: new Text("Merci d'autoriser le stockage"),
-          content: new Text("Autoriser le stockage dans les paramteres"),
+          title: new Text(
+              "Merci d'autoriser le stockage",
+              style: Theme.of(context).textTheme.title,
+      ),
+          content: new Text(
+              "Autoriser le stockage dans les parametres",
+              style: Theme.of(context).textTheme.subhead
+      ),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text(
+                  "Fermer",
+                style: Theme.of(context).textTheme.subtitle,
+              ),
               onPressed: () {
                 SystemChannels.platform.invokeMethod('SystemNavigator.pop');
               },

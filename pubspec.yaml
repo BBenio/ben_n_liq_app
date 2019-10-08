@@ -59,7 +59,10 @@ flutter:
   fonts:
      - family: IndieFlower
        fonts:
-         - asset: fonts/IndieFlower.ttf
+        - asset: fonts/IndieFlower.ttf
+     - family: Raleway
+       fonts:
+        - asset: fonts/Raleway/Raleway-Medium.ttf
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
