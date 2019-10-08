@@ -13,7 +13,10 @@ Future main() async {
 
   if (Platform.isAndroid) {
     PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
-    while(!(permission == PermissionStatus.granted) && permission != PermissionStatus.denied) {
+    print(permission);
+    print("granted " + PermissionStatus.granted.toString());
+    print("denied " + PermissionStatus.denied.toString());
+    if (permission != PermissionStatus.granted) {
       await PermissionHandler().requestPermissions([PermissionGroup.storage]);
       permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
     }
