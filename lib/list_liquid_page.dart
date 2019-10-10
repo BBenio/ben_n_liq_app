@@ -5,15 +5,16 @@ import 'package:ben_n_liq_app/liquid_page.dart';
 import 'package:ben_n_liq_app/liquid_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:clipboard_plugin/clipboard_plugin.dart';
 
 class ListLiquidsPage extends StatefulWidget {
   final LiquidService _liquidService;
   final DrawerActions _actions;
-  final textAppBar;
+  final _textAppBar;
 
-  ListLiquidsPage(this._liquidService, this._actions, this.textAppBar);
+  ListLiquidsPage(this._liquidService, this._actions, this._textAppBar);
 
   @override
   _ListLiquidsPageState createState() => _ListLiquidsPageState();
@@ -21,21 +22,21 @@ class ListLiquidsPage extends StatefulWidget {
 
 class _ListLiquidsPageState extends State<ListLiquidsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  bool show = true;
+  bool _show = true;
+  bool _isSearching = false;
   final List<Liquid> _liquidsToShow = [];
   final List<Liquid> _allLiquids = [];
-  ScrollController _scrollController = ScrollController();
-  Icon iconSearching = Icon(Icons.search);
-  final TextEditingController _controller = new TextEditingController();
-  bool _isSearching = false;
   List<Liquid> _searchResults = new List<Liquid>();
+  ScrollController _scrollController = ScrollController();
+  Icon _iconSearching = Icon(Icons.search);
+  final TextEditingController _controller = new TextEditingController();
   Widget appBarTitle;
 
   @override
   void initState() {
     new Future.delayed(Duration.zero, () {
       appBarTitle = Text(
-        widget.textAppBar,
+        widget._textAppBar,
         style: Theme.of(context).appBarTheme.textTheme.title,
       );
     });
@@ -64,13 +65,25 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: _buildAppBar(context),
-      drawer: DrawerLiquids(widget._liquidService),
-      floatingActionButton:
-          show ? _buildFloatingActionButton(context) : Container(),
-      body: _buildBody(),
+    return WillPopScope(
+        onWillPop: () {
+          if (widget._actions == DrawerActions.LiquidsNotEmpty) {
+            return SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+          }
+          Navigator.of(context).pop();
+          return Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ListLiquidsPage(
+                widget._liquidService, DrawerActions.LiquidsNotEmpty, "Liquid's Ben"),
+          ));
+        },
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: _buildAppBar(context),
+        drawer: DrawerLiquids(widget._liquidService),
+        floatingActionButton:
+            _show ? _buildFloatingActionButton(context) : Container(),
+        body: _buildBody(),
+      )
     );
   }
 
@@ -84,12 +97,12 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     setState(() {
       if (_controller.text.isEmpty) {
         _searchResults.clear();
-        this.iconSearching = new Icon(
+        this._iconSearching = new Icon(
           Icons.search,
           color: Colors.white,
         );
         this.appBarTitle = Text(
-          widget.textAppBar,
+          widget._textAppBar,
           style: Theme.of(context).appBarTheme.textTheme.title,
         );
         _isSearching = false;
@@ -115,11 +128,11 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
 
   Widget _buildSearchButton() {
     return IconButton(
-      icon: iconSearching,
+      icon: _iconSearching,
       onPressed: () {
         setState(() {
-          if (iconSearching.icon == Icons.search) {
-            iconSearching = Icon(
+          if (_iconSearching.icon == Icons.search) {
+            _iconSearching = Icon(
               Icons.close,
               color: Colors.white,
             );
@@ -153,12 +166,8 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     _liquidsToString(_liquidsToShow).then((String stringResult) {
       ClipboardPlugin.copyToClipBoard(stringResult).then((result) {
         final snackBar = SnackBar(
-          content: Text('Copié'),
-          duration: Duration(seconds: 2),
-          action: SnackBarAction(
-            label: 'Ok',
-            onPressed: () {},
-          ),
+          content: Text('Copié !'),
+          duration: Duration(seconds: 2)
         );
         _scaffoldKey.currentState..showSnackBar(snackBar);
       });
@@ -299,12 +308,12 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => LiquidPage(
-                liquids[index],
-                Key(liquids[index].name),
-                saveLiquids: () {
-                  _saveLiquids();
-                },
-              ),
+            liquids[index],
+            Key(liquids[index].name),
+            saveLiquids: () {
+              _saveLiquids();
+            },
+          ),
         ));
       },
       title: _buildTitle(liquids[index], index, context),
@@ -314,12 +323,10 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
   }
 
   Text _buildTitle(Liquid liquid, int index, BuildContext context) {
-    return Text(
-      liquid.name,
-      style: Theme.of(context).textTheme.subhead,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis
-    );
+    return Text(liquid.name,
+        style: Theme.of(context).textTheme.subhead,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis);
   }
 
   Text _buildSubtitle(Liquid liquid, int index, BuildContext context) {
@@ -369,9 +376,9 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
   void listener() {
     if (_scrollController.position.userScrollDirection ==
         ScrollDirection.forward)
-      show = true;
+      _show = true;
     else
-      show = false;
+      _show = false;
 
     setState(() {});
   }

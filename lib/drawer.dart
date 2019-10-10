@@ -9,9 +9,9 @@ enum DrawerActions {
 }
 
 class DrawerLiquids extends StatelessWidget {
-  final LiquidService liquidService;
+  final LiquidService _liquidService;
 
-  DrawerLiquids(this.liquidService);
+  DrawerLiquids(this._liquidService);
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +51,23 @@ class DrawerLiquids extends StatelessWidget {
         Navigator.of(context).pop();
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ListLiquidsPage(
-              liquidService, DrawerActions.LiquidsNotEmpty, "Liquid's Ben"),
+              _liquidService, DrawerActions.LiquidsNotEmpty, "Liquid's Ben"),
         ));
+      },
+    );
+  }
+
+  ListTile _buildButtonToBuy(BuildContext context) {
+    return ListTile(
+      title: Text('Oh no !', style: Theme.of(context).textTheme.overline),
+      leading: Icon(Icons.thumb_down),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (context) => ListLiquidsPage(
+                  _liquidService, DrawerActions.LiquidsEmpty, "To buy, Bro")),
+        );
       },
     );
   }
@@ -69,22 +84,7 @@ class DrawerLiquids extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(
               builder: (context) => ListLiquidsPage(
-                  liquidService, DrawerActions.AllLiquids, "All Liquids")),
-        );
-      },
-    );
-  }
-
-  ListTile _buildButtonToBuy(BuildContext context) {
-    return ListTile(
-      title: Text('Oh no !', style: Theme.of(context).textTheme.overline),
-      leading: Icon(Icons.thumb_down),
-      onTap: () {
-        Navigator.of(context).pop();
-        Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context) => ListLiquidsPage(
-                  liquidService, DrawerActions.LiquidsEmpty, "To buy, Bro")),
+                  _liquidService, DrawerActions.AllLiquids, "All Liquids")),
         );
       },
     );

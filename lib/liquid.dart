@@ -1,50 +1,49 @@
 class Liquid {
-  String _name;
-  String _brand;
-  int _remainingQuantity;
+  String _name, _brand;
+  int _remainingQuantity, _bottle, _quantityPerBottle;
   double _rate, _price;
-  int _bottle;
-  int _quantityPerBottle;
 
   Liquid(this._name, this._brand,
-      [this._remainingQuantity = 3, this._rate = 0, this._price = 0, this._bottle = 0, this._quantityPerBottle]);
+      [this._remainingQuantity = 3,
+      this._rate = 0,
+      this._price = 0,
+      this._bottle = 0,
+      this._quantityPerBottle]);
 
   factory Liquid.fromJson(Map<String, dynamic> parsedJson) {
-    double rate, price = 0;
-    int bottle, quantityPerBottle, quantity = 0;
+    double _rateParsed, _priseParsed = 0;
+    int _bottleParsed, _quantityPerBottleParsed, _quantityParsed = 0;
+
     if (parsedJson['rate'] != null) {
-      rate = parsedJson['rate'].toDouble();
+      _rateParsed = parsedJson['rate'].toDouble();
     }
+
     if (parsedJson['price'] != null) {
-      price = parsedJson['price'].toDouble();
+      _priseParsed = parsedJson['price'].toDouble();
     }
+
     if (parsedJson['bottle'] != null) {
-      bottle = parsedJson['bottle'];
+      _bottleParsed = parsedJson['bottle'];
     }
+
     if (parsedJson['quantity_bottle'] != null) {
-      quantityPerBottle = parsedJson['quantity_bottle'];
+      _quantityPerBottleParsed = parsedJson['quantity_bottle'];
     }
+
     if (parsedJson['quantity'] != null) {
-      quantity = parsedJson['quantity'];
+      _quantityParsed = parsedJson['quantity'];
     } else if (parsedJson['remaining_quantity'] != null) {
-      quantity = parsedJson['remaining_quantity'];
+      _quantityParsed = parsedJson['remaining_quantity'];
     }
-    return Liquid(
-        parsedJson['name'],
-        parsedJson['brand'],
-        quantity,
-        rate,
-        price,
-        bottle,
-        quantityPerBottle
-    );
+
+    return Liquid(parsedJson['name'], parsedJson['brand'], _quantityParsed,
+        _rateParsed, _priseParsed, _bottleParsed, _quantityPerBottleParsed);
   }
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'name': _name,
         'brand': _brand,
-        'remaining_quantity': remainingQuantity,
+        'remaining_quantity': _remainingQuantity,
         'rate': _rate,
         'price': _price,
         'bottle': _bottle,
@@ -58,9 +57,10 @@ class Liquid {
   removeOneQuantity() {
     if (this._remainingQuantity > 0) {
       this._remainingQuantity--;
-    }
-    if (this._remainingQuantity == 0) {
-      removeOneBottle();
+
+      if (this._remainingQuantity == 0) {
+        removeOneBottle();
+      }
     }
   }
 
@@ -75,6 +75,8 @@ class Liquid {
   }
 
   String get name => this._name;
+
+  set name(String newName) => this._name = newName;
 
   double get rating => this._rate;
 
@@ -95,6 +97,8 @@ class Liquid {
   }
 
   String get brand => this._brand;
+
+  set brand(String newBrand) => this._brand = newBrand;
 
   int get remainingQuantity => this._remainingQuantity;
 

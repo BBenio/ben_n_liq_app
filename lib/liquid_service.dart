@@ -11,29 +11,29 @@ class LiquidService {
   }
 
   Future<String> get _localVisiblePath async {
-    Directory directory;
+    Directory _directory;
     if (Platform.isAndroid) {
-      directory = await getExternalStorageDirectory();
+      _directory = await getExternalStorageDirectory();
     } else if (Platform.isIOS) {
-      directory = await getApplicationDocumentsDirectory();
+      _directory = await getApplicationDocumentsDirectory();
     }
-    return directory.path;
+    return _directory.path;
   }
 
   Future<File> get _localHiddenFile async {
-    final path = await _localHiddenPath;
-    return File('$path/liquids.json');
+    final _path = await _localHiddenPath;
+    return File('$_path/liquids.json');
   }
 
   Future<File> get _localVisibleFile async {
-    final path = await _localVisiblePath;
+    final _path = await _localVisiblePath;
     if (Platform.isAndroid) {
-      if (!(await Directory('$path/BenNLiq').exists())) {
-      new Directory('$path/BenNLiq').create();
+      if (!(await Directory('$_path/BenNLiq').exists())) {
+        new Directory('$_path/BenNLiq').create();
       }
-      return File('$path/BenNLiq/liquids.json');
+      return File('$_path/BenNLiq/liquids.json');
     }
-    return File('$path/liquids.json');
+    return File('$_path/liquids.json');
   }
 
   Future<List<Liquid>> loadLiquidsDirectory() async {

@@ -47,11 +47,7 @@ class _LiquidPageState extends State<LiquidPage> {
           children: <Widget>[
             Expanded(
               child: Column(
-                children: <Widget>[
-                  _buildName(),
-                  _buildBrand(),
-                  _buildPrice()
-                ],
+                children: <Widget>[_buildName(), _buildBrand(), _buildPrice()],
               ),
             ),
             Container(
@@ -63,8 +59,7 @@ class _LiquidPageState extends State<LiquidPage> {
                       _buildButtons(),
                       _buildStars(),
                     ],
-                  )
-              ),
+                  )),
             )
           ],
         ),
@@ -112,7 +107,7 @@ class _LiquidPageState extends State<LiquidPage> {
   Widget _buildQuantity() {
     return Container(
       width: MediaQuery.of(context).size.width / 2,
-      child:Center(
+      child: Center(
         child: Text(
           quantity,
           style: Theme.of(context).primaryTextTheme.overline,
