@@ -96,9 +96,12 @@ class _LiquidPageState extends State<LiquidPage> {
       widget._liquid.name = liquid.name;
       widget._liquid.price = liquid.price;
       widget._liquid.bottle = liquid.bottle;
-      widget._liquid.quantityPerBottle = liquid.quantityPerBottle;
+      widget._liquid.remainingQuantity = liquid.remainingQuantity;
       widget._liquid.brand = liquid.brand;
       widget.saveLiquids();
+      setState(() {
+        quantity = widget._liquid.remainingQuantity.toString();
+      });
     }
   }
 

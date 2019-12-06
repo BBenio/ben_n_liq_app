@@ -1,6 +1,6 @@
-import 'package:ben_n_liq_app/drawer.dart';
+import 'package:ben_n_liq_app/drawer/drawer.dart';
 import 'package:ben_n_liq_app/liquid_service.dart';
-import 'package:ben_n_liq_app/list_liquid_page.dart';
+import 'package:ben_n_liq_app/list_liquid/list_liquid_page.dart';
 import 'package:flutter/material.dart';
 
 class BenNLiqApp extends StatelessWidget {

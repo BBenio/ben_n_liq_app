@@ -101,6 +101,7 @@ class Liquid {
   set brand(String newBrand) => this._brand = newBrand;
 
   int get remainingQuantity => this._remainingQuantity;
+  set remainingQuantity(int quantity) => this._remainingQuantity = quantity;
 
   int get quantityPerBottle => this._quantityPerBottle;
 

@@ -84,7 +84,7 @@ class _LiquidFormState extends State<LiquidForm> {
   TextFormField _buildNameField() {
     return TextFormField(
       textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(hintText: "Nom :"),
+      decoration: InputDecoration(labelText: "Nom :"),
       controller: _controllerName,
       autovalidate: true,
       focusNode: _nameFocus,
@@ -105,7 +105,7 @@ class _LiquidFormState extends State<LiquidForm> {
   TextFormField _buildBrandField() {
     return TextFormField(
       textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(hintText: "Marque :"),
+      decoration: InputDecoration(labelText: "Marque :"),
       controller: _controllerBrand,
       autovalidate: true,
       focusNode: _brandFocus,
@@ -125,7 +125,7 @@ class _LiquidFormState extends State<LiquidForm> {
   TextFormField _buildQuantityPerBottleField() {
     return TextFormField(
       textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(hintText: "Quantité :"),
+      decoration: InputDecoration(labelText: "Quantité :"),
       controller: _controllerQuantityPerBottle,
       autovalidate: true,
       focusNode: _quantityPerBottleFocus,
@@ -147,7 +147,7 @@ class _LiquidFormState extends State<LiquidForm> {
   TextFormField _buildQuantityBottleField() {
     return TextFormField(
       textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(hintText: "Flacon(s) :"),
+      decoration: InputDecoration(labelText: "Flacon(s) :"),
       controller: _controllerBottle,
       autovalidate: true,
       focusNode: _bottleFocus,
@@ -173,7 +173,7 @@ class _LiquidFormState extends State<LiquidForm> {
   TextFormField _buildPriceField() {
     return TextFormField(
       textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(hintText: "Prix d'un flacon :"),
+      decoration: InputDecoration(labelText: "Prix d'un flacon :"),
       controller: _controllerPrice,
       autovalidate: true,
       focusNode: _priceFocus,
@@ -199,7 +199,7 @@ class _LiquidFormState extends State<LiquidForm> {
       margin: EdgeInsets.all(10),
       child: RaisedButton(
         child: Text(
-          "Créer un liquide",
+          widget._liquid != null ? 'Modifer' : "Créer un liquide",
           style: Theme.of(context).textTheme.button,
         ),
         padding: EdgeInsets.all(10),
@@ -243,6 +243,12 @@ class _LiquidFormState extends State<LiquidForm> {
   }
 
   AppBar buildAppBar() {
+    if (widget._liquid != null) {
+      return AppBar(
+        title: Text("Modifier un liquide",
+            style: Theme.of(context).appBarTheme.textTheme.title),
+      );
+    }
     return AppBar(
       title: Text("Ajouter un liquide",
           style: Theme.of(context).appBarTheme.textTheme.title),

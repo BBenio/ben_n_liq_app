@@ -1,8 +1,8 @@
-import 'package:ben_n_liq_app/drawer.dart';
+import 'package:ben_n_liq_app/drawer/drawer.dart';
 import 'package:ben_n_liq_app/liquid.dart';
 import 'package:ben_n_liq_app/liquid_form.dart';
-import 'package:ben_n_liq_app/liquid_page.dart';
 import 'package:ben_n_liq_app/liquid_service.dart';
+import 'package:ben_n_liq_app/list_liquid/liquid_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +22,7 @@ class ListLiquidsPage extends StatefulWidget {
 
 class _ListLiquidsPageState extends State<ListLiquidsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  bool _show = true;
+  bool _showAddButton = true;
   bool _isSearching = false;
   final List<Liquid> _liquidsToShow = [];
   final List<Liquid> _allLiquids = [];
@@ -81,7 +81,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
         appBar: _buildAppBar(context),
         drawer: DrawerLiquids(widget._liquidService),
         floatingActionButton:
-            _show ? _buildFloatingActionButton(context) : Container(),
+            _showAddButton ? _buildAddLiquidButton(context) : Container(),
         body: _buildBody(),
       )
     );
@@ -116,7 +116,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
 
   void _onSearchingOperation(String searchText) {
     _searchResults.clear();
-    if (_isSearching != null) {
+    if (_isSearching) {
       for (int i = 0; i < _liquidsToShow.length; i++) {
         String data = _liquidsToShow[i].name;
         if (data.toLowerCase().contains(searchText.toLowerCase())) {
@@ -167,7 +167,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
       ClipboardPlugin.copyToClipBoard(stringResult).then((result) {
         final snackBar = SnackBar(
           content: Text('Copié !'),
-          duration: Duration(seconds: 2)
+          duration: Duration(seconds: 1)
         );
         _scaffoldKey.currentState..showSnackBar(snackBar);
       });
@@ -226,16 +226,11 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
           _liquidsToShow.add(liquid);
         }
       });
-      widget._liquidService
-          .saveVisibleLiquids(_allLiquids)
-          .then((f) => _scaffoldKey.currentState.showSnackBar(SnackBar(
-                content: Text('Enregistrés !'),
-                duration: Duration(seconds: 1),
-              )));
+      _saveLiquid("Enregistré !");
     }
   }
 
-  FloatingActionButton _buildFloatingActionButton(BuildContext context) {
+  FloatingActionButton _buildAddLiquidButton(BuildContext context) {
     return FloatingActionButton(
       child: Icon(Icons.add),
       onPressed: () {
@@ -262,7 +257,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
           return Slidable(
             closeOnScroll: true,
             key: Key(_searchResults[index].name + _searchResults[index].brand),
-            child: _buildLiquidTile(_searchResults, index, context),
+            child: LiquidCard(_searchResults[index], _saveLiquidsCallback),
             delegate: SlidableDrawerDelegate(),
             actionExtentRatio: 0.25,
             actions: <Widget>[
@@ -285,7 +280,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
         return Slidable(
           closeOnScroll: true,
           key: Key(_liquidsToShow[index].name + _liquidsToShow[index].brand),
-          child: _buildLiquidTile(_liquidsToShow, index, context),
+          child: LiquidCard(_liquidsToShow[index], _saveLiquidsCallback),
           delegate: SlidableDrawerDelegate(),
           actionExtentRatio: 0.25,
           actions: <Widget>[
@@ -301,73 +296,15 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
     );
   }
 
-  ListTile _buildLiquidTile(
-      List<Liquid> liquids, int index, BuildContext context) {
-    return ListTile(
-      key: Key(liquids[index].name),
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => LiquidPage(
-            liquids[index],
-            Key(liquids[index].name),
-            saveLiquids: () {
-              _saveLiquids();
-            },
-          ),
-        ));
-      },
-      title: _buildTitle(liquids[index], index, context),
-      subtitle: _buildSubtitle(liquids[index], index, context),
-      trailing: _buildRate(liquids[index], index, context),
-    );
-  }
-
-  Text _buildTitle(Liquid liquid, int index, BuildContext context) {
-    return Text(liquid.name,
-        style: Theme.of(context).textTheme.subhead,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis);
-  }
-
-  Text _buildSubtitle(Liquid liquid, int index, BuildContext context) {
-    return Text(
-      liquid.remainingQuantity.toString(),
-      style: Theme.of(context).textTheme.subtitle,
-    );
-  }
-
-  Widget _buildRate(Liquid liquid, int index, BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Text(
-          liquid.rating.toString(),
-          style: Theme.of(context).textTheme.subtitle,
-        ),
-        Icon(
-          Icons.star,
-          color: Colors.orange,
-          size: 15.0,
-        )
-      ],
-    );
-  }
-
   _deleteLiquid(int index) {
     setState(() {
       _allLiquids.remove(_liquidsToShow.elementAt(index));
       _liquidsToShow.removeAt(index);
     });
-    widget._liquidService
-        .saveVisibleLiquids(_allLiquids)
-        .then((f) => _scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text('Supprimé !'),
-              duration: Duration(seconds: 1),
-            )));
+    _saveLiquid("Supprimé !");
   }
 
-  _saveLiquids() {
+  _saveLiquidsCallback() {
     widget._liquidService
         .saveVisibleLiquids(_allLiquids)
         .then((f) => print("enregistré"));
@@ -376,10 +313,19 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
   void listener() {
     if (_scrollController.position.userScrollDirection ==
         ScrollDirection.forward)
-      _show = true;
+      _showAddButton = true;
     else
-      _show = false;
+      _showAddButton = false;
 
     setState(() {});
+  }
+
+  _saveLiquid(String msg) {
+    widget._liquidService
+        .saveVisibleLiquids(_allLiquids)
+        .then((f) => _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(msg),
+      duration: Duration(seconds: 1),
+    )));
   }
 }
