@@ -2,6 +2,10 @@ import 'package:ben_n_liq_app/liquid.dart';
 import 'package:flutter/material.dart';
 
 class LiquidForm extends StatefulWidget {
+  final Liquid _liquid;
+
+  LiquidForm([this._liquid]);
+
   @override
   _LiquidFormState createState() => _LiquidFormState();
 }
@@ -32,6 +36,14 @@ class _LiquidFormState extends State<LiquidForm> {
     _controllerQuantityPerBottle = TextEditingController();
     _controllerBottle = TextEditingController();
     _controllerPrice = TextEditingController();
+    if (widget._liquid != null) {
+      print(widget._liquid.remainingQuantity);
+      _controllerName.text = widget._liquid.name;
+      _controllerBrand.text = widget._liquid.brand;
+      _controllerQuantityPerBottle.text = widget._liquid.remainingQuantity.toString();
+      _controllerBottle.text = widget._liquid.bottle.toString();
+      _controllerPrice.text = widget._liquid.price.toString();
+    }
   }
 
   @override

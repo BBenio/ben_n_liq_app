@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 
+import 'liquid_form.dart';
+
 class LiquidPage extends StatefulWidget {
   final Liquid _liquid;
   final VoidCallback saveLiquids;
@@ -16,13 +18,10 @@ class LiquidPage extends StatefulWidget {
 class _LiquidPageState extends State<LiquidPage> {
   String quantity;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  bool _buttonPressed = false;
   bool _buttonAddPressed = false;
   bool _buttonDecreasePressed = false;
-  bool _loopActive = false;
   bool _loopAddActive = false;
   bool _loopDecreaseActive = false;
-  int _counter = 0;
 
   @override
   void initState() {
@@ -39,6 +38,14 @@ class _LiquidPageState extends State<LiquidPage> {
       appBar: AppBar(
         title: Text('${widget._liquid.name}',
             style: Theme.of(context).appBarTheme.textTheme.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              _showDialogAddLiquid(context);
+            },
+          )
+        ],
       ),
       body: Center(
         child: Column(
@@ -77,6 +84,22 @@ class _LiquidPageState extends State<LiquidPage> {
         overflow: TextOverflow.ellipsis,
       ),
     );
+  }
+
+  _showDialogAddLiquid(BuildContext context) async {
+    Liquid liquid = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LiquidForm(widget._liquid)),
+    );
+
+    if (liquid != null) {
+      widget._liquid.name = liquid.name;
+      widget._liquid.price = liquid.price;
+      widget._liquid.bottle = liquid.bottle;
+      widget._liquid.quantityPerBottle = liquid.quantityPerBottle;
+      widget._liquid.brand = liquid.brand;
+      widget.saveLiquids();
+    }
   }
 
   Widget _buildBrand() {
@@ -128,41 +151,6 @@ class _LiquidPageState extends State<LiquidPage> {
     );
   }
 
-  Widget testbutton() {
-    return Listener(
-      onPointerDown: (details) {
-        print("appuyer");
-        _buttonPressed = true;
-        _increaseCounterWhilePressed();
-      },
-      onPointerUp: (details) {
-        print("relacher");
-        _buttonPressed = false;
-      },
-      child: Container(
-        decoration: BoxDecoration(color: Colors.orange, border: Border.all()),
-        padding: EdgeInsets.all(16.0),
-        child: Text('Value: $_counter'),
-      ),
-    );
-  }
-
-  void _increaseCounterWhilePressed() async {
-    if (_loopActive) return;
-
-    _loopActive = true;
-
-    while (_buttonPressed) {
-      setState(() {
-        _counter++;
-      });
-
-      await Future.delayed(Duration(milliseconds: 200));
-    }
-
-    _loopActive = false;
-  }
-
   Widget _buildButtonAdd() {
     return Container(
         margin: EdgeInsets.all(10),
@@ -201,14 +189,6 @@ class _LiquidPageState extends State<LiquidPage> {
     widget.saveLiquids();
 
     _loopAddActive = false;
-  }
-
-  _onAddQuantity() {
-    widget._liquid.addOneQuantity();
-    widget.saveLiquids();
-    setState(() {
-      quantity = widget._liquid.remainingQuantity.toString();
-    });
   }
 
   Widget _buildButtonMinus() {
