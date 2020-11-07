@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:ben_n_liq_app/home/ben_n_liq_home_page.dart';
 import 'package:ben_n_liq_app/error/error_page.dart';
+import 'package:ben_n_liq_app/liquid.dart';
 import 'package:ben_n_liq_app/liquid_service.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -29,7 +30,7 @@ Future main() async {
     LiquidService liquidService = LiquidService();
 //  List<Liquid> liquids = List<Liquid>();
 
-//  liquids = await liquidService.loadLiquidsDirectory();
+//  liquids = await liquidService.loadVisibleLiquidsDirectory();
 //  liquidService.saveLiquids(liquids);
 //  liquidService.saveVisibleLiquids(liquids);
 

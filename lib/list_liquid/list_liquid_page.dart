@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:clipboard_plugin/clipboard_plugin.dart';
+import 'package:clipboard/clipboard.dart';
 
 class ListLiquidsPage extends StatefulWidget {
   final LiquidService _liquidService;
@@ -164,7 +164,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
 
   _handleCopy() {
     _liquidsToString(_liquidsToShow).then((String stringResult) {
-      ClipboardPlugin.copyToClipBoard(stringResult).then((result) {
+      FlutterClipboard.copy(stringResult).then((result) {
         final snackBar = SnackBar(
           content: Text('Copié !'),
           duration: Duration(seconds: 1)
@@ -258,7 +258,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
             closeOnScroll: true,
             key: Key(_searchResults[index].name + _searchResults[index].brand),
             child: LiquidCard(_searchResults[index], _saveLiquidsCallback),
-            delegate: SlidableDrawerDelegate(),
+            actionPane: SlidableDrawerActionPane(),
             actionExtentRatio: 0.25,
             actions: <Widget>[
               IconSlideAction(
@@ -281,7 +281,7 @@ class _ListLiquidsPageState extends State<ListLiquidsPage> {
           closeOnScroll: true,
           key: Key(_liquidsToShow[index].name + _liquidsToShow[index].brand),
           child: LiquidCard(_liquidsToShow[index], _saveLiquidsCallback),
-          delegate: SlidableDrawerDelegate(),
+          actionPane: SlidableDrawerActionPane(),
           actionExtentRatio: 0.25,
           actions: <Widget>[
             IconSlideAction(
